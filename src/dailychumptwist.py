@@ -48,7 +48,7 @@ class DailyChumpTwist(irc.IRCClient,IChumpListener):
     def __init__(self, chump, channel, nickname,
                  sheet=None, password=None,
                  mode=_M_NOTICE, addressing=_A_GENERAL,
-                 use_unicode=0):
+                 use_unicode=0, pingurl=None):
         self.nickname = nickname
         self.channel = channel
         self.foocount = 0
@@ -58,6 +58,8 @@ class DailyChumpTwist(irc.IRCClient,IChumpListener):
         self.use_utf8 = use_unicode
         if sheet!=None:
             self.chump.set_stylesheet(sheet)
+        if pingurl!=None:
+            self.chump.set_ping_url(pingurl)
 
     def tc(self, s):
         if self.use_utf8:
@@ -217,7 +219,7 @@ class DailyChumpTwistFactory(protocol.ClientFactory):
     def __init__(self, chump, channel, nickname,
                  sheet=None, password=None,
                  mode=_M_NOTICE, addressing=_A_GENERAL,
-                 use_unicode=0):
+                 use_unicode=0, pingurl=None):
         self.channel = channel
         self.nickname = nickname
         self.sheet = sheet
@@ -226,11 +228,13 @@ class DailyChumpTwistFactory(protocol.ClientFactory):
         self.addressing = addressing
         self.chump = chump
         self.use_unicode = use_unicode
+        self.pingurl = pingurl
 
     def buildProtocol(self,addr):
         bot = DailyChumpTwist(self.chump, self.channel, self.nickname,
                             self.sheet, self.password,
-                            self.mode, self.addressing, self.use_unicode)
+                            self.mode, self.addressing, self.use_unicode,
+                            self.pingurl)
         bot.factory = self
         return bot
 
@@ -304,7 +308,8 @@ def main():
                                    "address",
                                    "utf-8",
                                    "web",
-                                   "xsl"])
+                                   "xsl",
+                                   "pingurl="])
     port = 6667
 
     directory = ''
@@ -312,6 +317,7 @@ def main():
     nickname = ''
     server = ''
     password = ''
+    pingurl = None
     sheet = None
     mode = _M_NOTICE
     addressing = _A_GENERAL
@@ -362,6 +368,8 @@ def main():
         elif name in ('-v', '--version'):
             version()
             sys.exit(0)
+        elif name in ('--pingurlk'):
+            pingurl = value
 
     from dailychumptwist import DailyChumpTwistFactory, DailyChumpTwist
     if(directory != '' and channel != '' and
@@ -369,7 +377,8 @@ def main():
         chump = DailyChump(directory, use_unicode)
         bot = DailyChumpTwistFactory(chump, channel, nickname,
                             sheet, password,
-                            mode, addressing, use_unicode)
+                            mode, addressing, use_unicode,
+                            pingurl)
         app = service.Application("chump")
         servcoll = service.IServiceCollection(app)
         internet.TCPClient (server, port, bot).setServiceParent(

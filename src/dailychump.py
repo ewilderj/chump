@@ -24,6 +24,7 @@ import re
 import time
 import tempfile
 import shutil
+import urllib
 import os
 import os.path
 from EntityEncoder import EntityEncoder
@@ -70,6 +71,7 @@ class Churn:
         self._day = 0
         self._relative_uri=""
         self.use_utf8 = use_unicode
+        self._ping_url = ""
 
     def set_update_time(self,time):
         self.updatetime = time
@@ -82,6 +84,9 @@ class Churn:
 
     def get_relative_uri(self):
         return self._relative_uri
+
+    def set_ping_url (self, url):
+        self._ping_url = url
 
     def get_topic(self):
         return self.topic
@@ -283,6 +288,14 @@ class Churn:
         shutil.copy(name,self._filename())
         shutil.copy(name,self.get_archive_filename())
         os.unlink(name)
+        self.ping (self.get_archive_filename())
+
+    def ping(self, fname):
+        """provide simple mechanism for notifying of updates"""
+        if self._ping_url != "":
+            theurl = self._ping_url + urllib.quote (fname, '')
+            print theurl
+            urllib.urlretrieve (theurl)
 
     def set_archive_filename(self,fname):
         self.archive_filename=fname
@@ -522,6 +535,9 @@ class DailyChump:
 
     def set_stylesheet(self, sheet):
         self.churn.set_stylesheet(sheet)
+
+    def set_ping_url(self, url):
+        self.churn.set_ping_url(url)
 
     def process_input(self,nick,msg):
         um = urlmatch.match(msg)
