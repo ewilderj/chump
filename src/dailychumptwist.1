@@ -9,6 +9,7 @@ Chump \- manual page for Chump 1.99
 `./dailychumptwist.py' runs a weblog from an IRC channel.
 .IP
 \&./dailychumptwist.py [ \fB\-v\fR | \fB\-\-version\fR ]
+
 \&./dailychumptwist.py OPTIONS
 .TP
 \fB\-s\fR, \fB\-\-server\fR=\fISTRING\fR
@@ -46,6 +47,13 @@ by name.
 .TP
 \fB\-u\fR, \fB\-\-utf\-8\fR
 Expect UTF\-8, rather than Latin\-1, input
+.TP
+\fB\-w\fR, \fB\-\-web\fR=\fIPORT\fR
+Listen on specified port as a web server
+.TP
+\fB\-x\fR, \fB\-\-xsl\fR=\fIDIR\fR
+Use XSLT sheets in DIR to make web pages, using
+churn_{html,rdf,rss}.xsl month_html.xsl year_html.xsl
 .SH AUTHOR
 Written by Matt Biddulph and Edd Dumbill. <http://usefulinc.com/chump/>
 .SH "REPORTING BUGS"
