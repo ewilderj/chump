@@ -269,6 +269,9 @@ Usage: %s [ -h | --help ]
  -r, --address            Only respond to public messages that address bot
                           by name.
  -u, --utf-8              Expect UTF-8, rather than Latin-1, input
+ -w, --web=PORT           Listen on specified port as a web server
+ -x, --xsl=DIR            Use XSLT sheets in DIR to make web pages, using
+                          churn_{html,rdf,rss}.xsl month_html.xsl year_html.xsl
 
 Report bugs to <chump@heddley.com>""" % (invokedas, invokedas,
                                           invokedas, invokedas)
@@ -300,7 +303,7 @@ def main():
                                    "private",
                                    "address",
                                    "utf-8",
-				   "web",
+                                   "web",
                                    "xsl"])
     port = 6667
 
@@ -383,7 +386,7 @@ def main():
                 web.xsldir = xsldir
                 web.chumproot = directory
                 import quixote.server.twisted_http
-                quixote.server.twisted_http.Server("web",web_port)
+                quixote.server.twisted_http.Server("web", web_port)
             except ImportError:
                 print "quixote not found, can't start web server"
 
