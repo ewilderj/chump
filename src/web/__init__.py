@@ -12,7 +12,6 @@ def index_rss(request):
     return XmlFile(chumproot+os.path.sep+datetime.datetime.now().strftime("%Y/%02m/%02d/%Y-%02m-%02d.xml"),"rss",xsldir)._q_index(request)
 
 def _q_index(request):
-    print "!"
     return XmlDir(chumproot+os.path.sep+datetime.datetime.now().strftime("%Y/%02m/%02d"),xsldir)._q_index(request)
 
 def _q_lookup(request,component):
