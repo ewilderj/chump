@@ -1,5 +1,5 @@
 #!/usr/bin/python    -*- coding: utf-8 -*-
-# Copyright (c) 2001-2003 by
+# Copyright (c) 2001-2004 by
 # Matt Biddulph and Edd Dumbill, Useful Information Company
 # All rights reserved.
 #
@@ -20,7 +20,7 @@
 
 # $Id: dailychumpbot.py,v 1.16 2003/05/14 19:21:16 edmundd Exp $
 
-# daily chump v 1.3
+# daily chump v 2.0
 
 ## irc interface to the chump engine
 
@@ -31,10 +31,10 @@ import re
 
 from twisted.protocols import irc
 from twisted.internet import reactor, protocol
-from twisted.internet.app import Application, ApplicationService
+from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 
-_version="1.3"
+_version="2.0"
 
 _M_QUIET=0
 _M_PRIVMSG=1
@@ -57,7 +57,6 @@ class DailyChumpTwist(irc.IRCClient):
         self.use_utf8 = use_unicode
         if sheet!=None:
             self.chump.set_stylesheet(sheet)
-        #self.start()
 
     def tc(self, s):
         if self.use_utf8:
@@ -84,24 +83,27 @@ class DailyChumpTwist(irc.IRCClient):
 
     def signedOn(self):
         self.join(self.channel)
-        Fudge.chumpbot = self
 
     def privmsg(self, user, channel, message):
-        if(channel == self.nickname):
-            print message
-            print user
+        if(channel == self.nickname and user != ''):
             output = self.process_input(user, message)
             if output != None:
                 if isinstance(output, ChumpResponse):
                     stroutput=output._str
                 else:
                     stroutput=output
+                user = user[0:user.find('!')]
+                print "about to reply to %s with %s" % (user, stroutput)
                 self.privmsg_multiline(user,stroutput)
+                print "reply done"
         else:
             self.on_pubmsg(message, user)
 
     def process_input(self, nick, msg, talking_to_me=1):
         """feeds instructions to the chump engine"""
+        # clean up nick first, it's of the form
+        # nick!ident@host.domain.tld, and we just want 'nick'
+        nick = nick[0:nick.find('!')]
         output = self.chump.process_input(nick, msg)
         # if not a content contribution, must be a bot command
         # but only if we're being addressed
@@ -150,7 +152,7 @@ class DailyChumpTwist(irc.IRCClient):
 
     def privmsg_multiline(self,nick,msg):
         for x in string.split(msg,"\n"):
-            self.msg(nick, self.ec(x),len(self.ec(x)))
+            self.msg(nick, self.ec(x))
             time.sleep(1)
 
     def do_command(self, nick, cmd):
@@ -233,17 +235,15 @@ class DailyChumpTwistFactory(protocol.ClientFactory):
         """If we get disconnected, reconnect to server."""
         connector.connect()
 
-class Fudge:
-    chumpbot = None
-
 class OneTimeKey(Protocol):
     def connectionMade(self):
+        global _chumpbot
         key = self.factory.nextkey
         print "giving key", key
         self.factory.nextkey += 1
         self.transport.write("%d\n" % key)
         self.transport.loseConnection()
-        Fudge.chumpbot.notice_multiline("%d" % key)
+        _chumpbot.notice_multiline("%d" % key)
 
 def usage(invokedas):
     print """`%s' runs a weblog from an IRC channel.
@@ -273,7 +273,7 @@ Report bugs to <chump@heddley.com>""" % (invokedas, invokedas,
 def version():
     print "Chump "+_version
     print
-    print "Copyright (C) 2001, 2002 Matt Biddulph and Edd Dumbill"
+    print "Copyright (C) 2001-2004 Matt Biddulph and Edd Dumbill"
     print """This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -351,16 +351,19 @@ def main():
         bot = DailyChumpTwistFactory(directory, channel, nickname,
                             sheet, password,
                             mode, addressing, use_unicode)
-        app = Application("chump")
-        app.connectTCP(server,port,bot)
+        app = service.Application("chump")
+        servcoll = service.IServiceCollection(app)
+        internet.TCPClient (server, port, bot).setServiceParent(
+                servcoll)
+        #g = Factory()
+        #g.protocol = OneTimeKey
+        #g.nextkey = 0
+        #internet.TCPServer (9999,g).setServiceParent(
+        #      servcoll)
 
-        g = Factory()
-        g.protocol = OneTimeKey
-        g.nextkey = 0
-        app.listenTCP(9999,g)
+        service.IService(app).startService ()
+        reactor.run ()
 
-        # to make a .tape file for twistd, use app.save("bot") instead
-        app.run()
     else:
         usage(sys.argv[0])
         sys.exit(1)
