@@ -1,4 +1,4 @@
-# Copyright (c) 2001-2003 by Matt Biddulph and Edd Dumbill,
+# Copyright (c) 2001-2004 by Matt Biddulph and Edd Dumbill,
 # Useful Information Company
 # All rights reserved.
 #
@@ -16,8 +16,6 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-# daily chump v 1.1
 
 # $Id: dailychump.py,v 1.19 2003/05/14 12:21:25 edmundd Exp $
 
@@ -490,10 +488,27 @@ class ChurnEntry:
         if commentno < len(self.comments) and commentno >= 0:
             self.comments.remove(self.comments[commentno])
 
+class IChumpListener:
+    def notify (event, arg):
+        pass
+
 class DailyChump:
     def __init__(self, directory, use_unicode=0):
         self.archiver = FileArchiver(directory)
         self.churn = self.archiver.retrieve_churn(use_unicode)
+        self.listeners = []
+
+    def add_listener(self, listener):
+        if 'notify' in dir(listener):
+            self.listeners.append(listener)
+        else:
+            raise Exception("Attempt to add listener with no notify() method")
+
+    def remove_listener(self, listener):
+        if listener in self.listeners:
+            self.listeners.remove(listener)
+        else:
+            raise Exception("Attempt to remove non-existent listener")
 
     def set_topic(self,topic):
         self.churn = self.archiver.archive_if_necessary(self.churn)

@@ -24,7 +24,7 @@
 
 ## irc interface to the chump engine
 
-from dailychump import DailyChump,ChumpResponse,ChumpErrorResponse,ChumpInfoResponse
+from dailychump import DailyChump,ChumpResponse,ChumpErrorResponse,ChumpInfoResponse,IChumpListener
 import string
 import time
 import re
@@ -34,7 +34,7 @@ from twisted.internet import reactor, protocol
 from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 
-_version="2.0"
+_version="1.99"
 
 _M_QUIET=0
 _M_PRIVMSG=1
@@ -43,15 +43,15 @@ _M_NOTICE=2
 _A_GENERAL=0
 _A_SPECIFIC=1
 
-class DailyChumpTwist(irc.IRCClient):
-    def __init__(self, directory, channel, nickname,
+class DailyChumpTwist(irc.IRCClient,IChumpListener):
+    def __init__(self, chump, channel, nickname,
                  sheet=None, password=None,
                  mode=_M_NOTICE, addressing=_A_GENERAL,
                  use_unicode=0):
         self.nickname = nickname
         self.channel = channel
         self.foocount = 0
-        self.chump = DailyChump(directory, use_unicode)
+        self.chump = chump
         self._mode=mode
         self._addressing=addressing
         self.use_utf8 = use_unicode
@@ -83,6 +83,10 @@ class DailyChumpTwist(irc.IRCClient):
 
     def signedOn(self):
         self.join(self.channel)
+        self.chump.add_listener(self)
+
+    def connectionLost(self, reason):
+        self.chump.remove_listener(self)
 
     def privmsg(self, user, channel, message):
         if(channel == self.nickname and user != ''):
@@ -182,8 +186,6 @@ class DailyChumpTwist(irc.IRCClient):
                 return self.chump.view_recent_items(count)
             else:
                 return self.chump.view_recent_items()
-        elif cmd == "die" or cmd == "depart" or cmd == "leave":
-            self.die()
         elif cmd == "status":
             r=u"I am the Daily Chump Bot, version %s. "
             if self._mode==_M_NOTICE:
@@ -211,21 +213,21 @@ class DailyChumpTwistFactory(protocol.ClientFactory):
  
     protocol = DailyChumpTwist
 
-    def __init__(self, directory, channel, nickname,
+    def __init__(self, chump, channel, nickname,
                  sheet=None, password=None,
                  mode=_M_NOTICE, addressing=_A_GENERAL,
                  use_unicode=0):
-         self.directory = directory
-         self.channel = channel
-         self.nickname = nickname
-         self.sheet = sheet
-         self.password = password
-         self.mode = mode
-         self.addressing = addressing
-         self.use_unicode = use_unicode
+        self.channel = channel
+        self.nickname = nickname
+        self.sheet = sheet
+        self.password = password
+        self.mode = mode
+        self.addressing = addressing
+        self.chump = chump
+        self.use_unicode = use_unicode
 
     def buildProtocol(self,addr):
-        bot = DailyChumpTwist(self.directory, self.channel, self.nickname,
+        bot = DailyChumpTwist(self.chump, self.channel, self.nickname,
                             self.sheet, self.password,
                             self.mode, self.addressing, self.use_unicode)
         bot.factory = self
@@ -348,7 +350,8 @@ def main():
     from dailychumptwist import DailyChumpTwistFactory, DailyChumpTwist
     if(directory != '' and channel != '' and
        nickname != '' and server != ''):
-        bot = DailyChumpTwistFactory(directory, channel, nickname,
+        chump = DailyChump(directory, use_unicode)
+        bot = DailyChumpTwistFactory(chump, channel, nickname,
                             sheet, password,
                             mode, addressing, use_unicode)
         app = service.Application("chump")
