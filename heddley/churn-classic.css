@@ -1,0 +1,34 @@
+
+body { background-color: beige ; link: green; }
+
+a { color: green; }
+a:visited { color: brown; }
+
+blockquote,p { font-family: Verdana, Helvetica, Arial; 
+    font-size: 1em; 
+  }
+
+h4 { font-family: Verdana, Helvetica, Arial; 
+    font-size: 0.8em; 
+  }
+
+.title { font-weight: bold; }
+.topic { font-weight: bold; font-style: italic; color: gray; 
+         font-size: 1.1em; }
+.byline { font-size: 0.8em; }
+.nick { font-weight: bold; }
+.commenter { color: gray; }
+.timestamp { font-size: 0.8em; color: gray; }
+.attribution { font-family: Verdana, Helvetica, Arial;
+			font-size: 0.7em; color: gray; }
+.archive { font-family: Verdana, Helvetica, Arial;
+			font-size: 0.8em; color: gray; }
+.pframe { text-align: center; margin-left: 4px; margin-right: 4px; padding-bottom: 5px; padding-top: 5px;  }
+.ppic { border: solid black 1px; }
+.clogo { border: none; margin-bottom: 5px; text-align: center;  }
+.cgraph { background-color: #dddddd; padding: 4px; border: solid black 1px;
+         text-align: center; }
+.carchive { font-family: Verdana, Helvetica, Arial;
+	font-size: 0.8em; font-weight: bold; text-align: center; }
+.carchivel:link { color: #555555; }
+.carchivel:visited { color: #555555; }

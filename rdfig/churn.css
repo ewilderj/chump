@@ -1,0 +1,29 @@
+
+body { background-color: white; }
+
+blockquote,p { 
+    font-size: medium; 
+    font-family: Georgia, Times New Roman, serif;
+  }
+
+h1 {
+   font-family: Verdana, Arial, Helvetica;
+   font-size: 18;
+}
+
+h4 { 
+   font-family: Verdana, Arial, Helvetica;
+    font-size: small; 
+  }
+
+.title { font-weight: bold; }
+.topic { font-weight: bold; font-style: italic; color: gray; 
+         font-size: large; font-family: Verdana, Arial, Helvetica; }
+.byline { font-size: small; }
+.nick { font-weight: bold; }
+.commenter { color: gray; }
+.timestamp { font-size: small; color: gray; }
+.attribution { 
+			font-size: smaller; color: gray; }
+.archive {  font-family: Verdana, Arial, Helvetica;
+			font-size: small; color: gray; }

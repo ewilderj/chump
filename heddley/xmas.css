@@ -1,0 +1,36 @@
+body { color: #BDBDEF; background-color: #717BB8; font-size: 13pt; link: #000070; }
+
+a { color: #2F2F7A; }
+a:visited { color: #0D0D4C; }
+
+blockquote,p { font-family: Verdana, Helvetica, Arial;
+    font-size: 0.9em;
+  }
+
+h4 { font-family: Verdana, Helvetica, Arial;
+    font-size: 0.8em;
+  }
+
+.title { font-weight: normal; font-family: Georgia, Times New Roman, Times;
+    font-size: 1.2em}
+.topic { font-weight: normal; font-style: italic; 
+         font-size: 1.3em; font-family: Georgia, Times New Roman, Times; }
+.byline { font-size: 0.8em; }
+.nick { font-weight: bold; }
+.commenter { font-style: italic; }
+.comment { color: #E5E5FF; }
+.timestamp { font-size: 0.8em; color: #E5E5FF; }
+.attribution { font-family: Verdana, Helvetica, Arial;
+font-size: 0.7em; color: #E5E5FF; }
+.archive { font-family: Verdana, Helvetica, Arial;
+font-size: 0.8em; color: #E5E5FF; }
+.pframe { text-align: center; margin-left: 4px; margin-right: 4px; padding-bottom: 5px; padding-top: 5px;  }
+.ppic { border: solid black 1px; }
+.clogo { border: none; margin-bottom: 5px; text-align: center;  }
+.cgraph { background-color: #dddddd; padding: 4px; border: solid black 1px;
+         text-align: center; }
+.carchive { font-family: Verdana, Helvetica, Arial;
+font-size: 0.8em; font-weight: bold; text-align: center; }
+.carchivel:link { color: #555555; }
+.carchivel:visited { color: #555555; }
+

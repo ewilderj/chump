@@ -1,0 +1,139 @@
+<!DOCTYPE churn>
+<churn>
+<last-updated value="981935387.867553">2001-02-11 23:49</last-updated>
+<itemcount value="19" />
+<topic>cattle rails on the road of progress</topic>
+<link type="blurb">
+<time value="981935329.636765">2001-02-11 23:48</time>
+<nick>mattb</nick>
+<title>Time to go to bed and watch a film</title>
+<comment nick="mattb"><a href="http://us.imdb.com/Title?0114814">The Usual Suspects</a> tonight</comment>
+<comment nick="mattb">Hooray for cheap DVDs from Canada</comment>
+</link>
+<link>
+<time value="981924588.602623">2001-02-11 20:49</time>
+<url>http://www.opencola.com/software/octech.html</url>
+<nick>mattb</nick>
+<title>OpenCola tech overview</title>
+<comment nick="mattb">Smart Folders to be released at the P2P conference</comment>
+<comment nick="mattb">I look forwarding to playing with it</comment>
+<comment nick="mattb">Any technology that has something called a Clerver as part of it is OK by me</comment>
+<comment nick="mattb">Hmm, I look forwarding, do I? <i>Duh</i>, guess I still need more sleep.</comment>
+</link>
+<link>
+<time value="981924493.179389">2001-02-11 20:48</time>
+<url>http://www.xml.com/pub/a/2001/01/10/rddl.html</url>
+<nick>edd</nick>
+<title>RDDL as described by Leigh Dodds</title>
+<comment nick="edd"><i>Resource Discovery Description Language</i></comment>
+</link>
+<link>
+<time value="981924103.803078">2001-02-11 20:41</time>
+<url>http://www.w3.org/Addressing/</url>
+<nick>edd</nick>
+<title>Naming and Addressing: URIs, URLs...</title>
+<comment nick="edd">Includes a nice Venn diagram of URIs, URNs and URLs</comment>
+<comment nick="mattb">An ASCII Venn diagram, no less. Admirable LoFi.</comment>
+</link>
+<link>
+<time value="981922515.923794">2001-02-11 20:15</time>
+<url>http://www.actwin.com/fish/species/index.php?t=9&amp;i=108</url>
+<nick>edd</nick>
+<title>Blue Head Tilefish</title>
+<comment nick="edd">aka <i>Hoplolatilus starcki</i></comment>
+<comment nick="edd">From the excellent <a href="http://www.actwin.com/fish/species/index.php?t=2&amp;f=2">fish index</a></comment>
+<comment nick="edd">The <a href="http://www.actwin.com/fish/species/index.php?t=9&amp;i=161">spotted puffer</a> looks cool.</comment>
+</link>
+<link>
+<time value="981917502.364750">2001-02-11 18:51</time>
+<url>http://www.kpix.com/live/big.html</url>
+<nick>edd</nick>
+<title>doesn&apos;t look too sunny in SF!</title>
+</link>
+<link>
+<time value="981916732.037561">2001-02-11 18:38</time>
+<url>http://news.bbc.co.uk/hi/english/world/asia-pacific/newsid_1164000/1164942.stm</url>
+<nick>edd</nick>
+<title>US/Japanese sub collision raises tensions</title>
+<comment nick="edd">&quot;Even after a swift apology from the US, the accident will add to perennial resentment over the US military presence in Japan, particularly on the Japanese island of Okinawa.&quot;</comment>
+<comment nick="edd">The US troops on Okinawa seem to have behaved pretty despicably.</comment>
+</link>
+<link>
+<time value="981912721.038271">2001-02-11 17:32</time>
+<url>http://news.bbc.co.uk/hi/english/audiovideo/programmes/pm/newsid_1163000/1163839.stm</url>
+<nick>edd</nick>
+<title>Frankenstein exhibition</title>
+<comment nick="edd">Are you fascinated or appalled?</comment>
+<comment nick="edd">I&apos;d like to see this, myself.</comment>
+</link>
+<link>
+<time value="981912171.091775">2001-02-11 17:22</time>
+<url>http://ontobroker.semanticweb.org/rdfcrawl/index.html</url>
+<nick>edd</nick>
+<title>RDF Crawler</title>
+<comment nick="edd">&quot;a java-based tool/API which downloads interconnected fragments of RDF from the Internet and builds a knowledge base from this data&quot;</comment>
+</link>
+<link>
+<time value="981911120.146767">2001-02-11 17:05</time>
+<url>http://scoreboard.sourceforge.net/</url>
+<nick>edd</nick>
+<title>Cricket Scoreboard for Linux</title>
+<comment nick="edd">Not so keen on the graphics, but still sounds very promising.</comment>
+</link>
+<link>
+<time value="981904274.304012">2001-02-11 15:11</time>
+<url>http://news.gnome.org/gnome-news/981746971/</url>
+<nick>edd</nick>
+<title>Yummy, looks like antialiasing might make its way onto my desktop before long</title>
+<comment nick="edd">This news article has screesnhots of GNOME and Mozilla apps using the XFree86 XRender extension stuff.</comment>
+<comment nick="edd">For typeface fetishists everywhere, this has to be happy news.</comment>
+</link>
+<link>
+<time value="981904063.624568">2001-02-11 15:07</time>
+<url>http://jpilot.org/</url>
+<nick>edd</nick>
+<title>Another Palm Pilot desktop organizer suite for Linux</title>
+<comment nick="edd">Misnamed JPilot, this thing uses GTK+ rather than Java</comment>
+<comment nick="edd">Although I suppose that to allot 1/26th of everything to Java is a bit over the top.</comment>
+<comment nick="edd">This reminds me of a text editor I saw advertised on Freshmeat the other day, which was simply called &apos;J&apos;.</comment>
+<comment nick="edd">As I observed to MattB, this blatant land-grab for an entire 1/26th of such a restricted namespace seems rather presumptious.</comment>
+<comment nick="edd">The only 1-letter applications I can think of that merit their place are B and C.</comment>
+</link>
+<link type="blurb">
+<time value="981903942.876131">2001-02-11 15:05</time>
+<nick>edd</nick>
+<title>Have I ever said before that I hate the phrase &quot;seamlessly integrate&quot;?</title>
+<comment nick="matt">not to me</comment>
+<comment nick="edd">well, this is a chance to bring a whole new dimension of dislike into our mutual knowledge.</comment>
+<comment nick="matt">coo, there&apos;s an offer you don&apos;t get every day.</comment>
+</link>
+<link>
+<time value="981903833.483153">2001-02-11 15:03</time>
+<url>http://i-want-a-website.com/about-linux/downloads.shtml</url>
+<nick>edd</nick>
+<title>Nonsense 0.6</title>
+<comment nick="edd">&quot;Nonsense generates random (and sometimes humorous) text using a simple, recursive grammar. It&apos;s capable of producing the Slashdot homepage&quot;</comment>
+<comment nick="edd">Confirming what we already thought...</comment>
+</link>
+<link>
+<time value="981903745.413755">2001-02-11 15:02</time>
+<url>http://www.mdsoft.net/xircbot/</url>
+<nick>edd</nick>
+<title>I can&apos;t help feeling that this bot is overfeatured</title>
+<comment nick="edd">It&apos;s own custom programming language, <i>skins</i> for Windows...</comment>
+</link>
+<link>
+<time value="981894804.034422">2001-02-11 12:33</time>
+<url>http://www.imdb.com/Title?0203119</url>
+<nick>mattb</nick>
+<title>Sexy Beast</title>
+<comment nick="mattb">I&apos;m off to the cinema this afternoon</comment>
+</link>
+<link>
+<time value="981894046.841655">2001-02-11 12:20</time>
+<url>http://www.kuro5hin.org/?op=displaystory;sid=2001/1/31/18749/1930</url>
+<nick>mattb</nick>
+<title>Capturing, editing and replaying digital video</title>
+<comment nick="mattb">I might need to read more about this later</comment>
+</link>
+</churn>

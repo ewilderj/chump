@@ -1,0 +1,21 @@
+mod_xslt.patch
+
+This patch against the Apache web server module mod_xslt version 1.1
+<http://modxslt.userworld.com/> enables more sophisticated configuration for
+the location of stylesheets than the original.  This allows you to set up
+stylesheets in a separate directory to where the XML files are actually stored.
+
+To use, follow the instructions from the web site above.  The extra
+configuration this patch allows is:
+
+  XSLTSheetDir /path/to/xslt_files
+
+This makes mod_xslt look for stylesheets in the directory:
+
+  /path/to/xslt_files/server.domain/
+
+Where server.domain is the name of your server as configured by the ServerName
+directive.  This allows the use of mod_xslt with virtual named servers.
+
+-- 
+$Id: README.mod_xslt,v 1.1 2001/03/15 23:15:48 edmundd Exp $

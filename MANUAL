@@ -1,0 +1,252 @@
+Daily Chump Bot Readme: Chump Version 1.3
+
+  $Id: MANUAL,v 1.10 2003/05/14 12:59:35 edmundd Exp $
+
+Contents
+
+  1. Overview
+  2. Installation
+  3. Using the bot
+  4. Advanced usage
+  5. Addressing and verbosity modes
+  6. XML and Archiving
+  7. Why the "Daily Chump"?
+  8. Chumps we know of
+  9. Credits
+
+1. Overview
+
+  This code allows you to run a collaborative weblog from your favourite
+  IRC channel. A bot, written in Python, monitors URLs posted in the
+  channel, and comments relating to those URLs.
+
+  The bot automatically creates XML output from which you can create a
+  web site, whose look-and-feel can be determined by your application of
+  an XSLT stylesheet or other styling program.
+
+  The XML files are automatically archived, with each day's
+  comments and URLs assigned a permanent URL. Using additional programs
+  in this distribution you can create links to recent
+  days. Additionally, you may deploy a search engine of your choice to
+  make the archives searchable.
+
+  If you encounter problems and would like to get in touch with us, send
+  email to <mailto:chump@heddley.com>. If any of the examples in this
+  README get confusing, have a look at the original Daily Chump
+  <http://pants.heddley.com/> to see it in action.
+
+  We'll do our best to help but please try hard to figure out your
+  problems before contacting us.
+
+  If you run a Chump with public pages, please send the URL to
+  <chump@heddley.com> and we'll add the link into our pages.
+
+2. Installation
+
+  Please refer to the file INSTALL in this distribution to find out how
+  to set up your Chump bot.
+
+3. Using the bot
+
+  The bot picks up on URLs and other keywords posted in the channel.
+
+  For the sake of this example, our bot is called 'dc', our fictitious
+  user is called 'fred', and we're in  channel '#chump'.
+
+  The simplest thing to do is to post a URL in, on a line on its own,
+  like this:
+
+       http://foo.com/bar.html
+
+  The bot will reply with a label, say A, like this:
+
+       -dc:#chump- A:http://foo.com/bar.html from fred
+
+  Now you can then append comments about that URL by typing:
+
+       A:This is my comment
+
+  The URL will appear as a raw URL in the output, unless you give it a
+  title. To do so, add a comment with a pipe in front of it, like this:
+
+       A:|Foo.com - home of all things fooish
+
+  You can change this title simply by posted a new piped comment, which
+  will automatically over-ride the previous one.
+
+  You can also use the Chump to post short notes that do not have a related 
+  URL. To start one of these, type:
+
+        BLURB:My story about foo
+
+  Again, the bot will assign a letter to this blurb, and you can add to
+  it in the usual way.
+
+  You can also use the bot to add some basic wiki-style markup to your 
+  comments. So, words within *asterisks* will appear emphasized.
+
+  You can add an inline link (i.e., one within the text of a comment,
+  rather than the title of a series of comments) using this markup:
+
+        A:They also have [another site|http://foobar.com]
+
+  ... this will make the words "another site" appear as a hyperlink to
+  the URL immediately after them.
+
+  You can also add inline images, which is occasionally handy, and
+  frequently hilarious. These appear as though they are text comments
+  from channel users. To include an image, you must first find its
+  absolute URL, then post that as a comment like this:
+
+         A:+[http://url.of.image.com/image.jpg]
+
+  You can and should add alt-text to that inline image by inserting it
+  before a pipe, like this:
+
+         A:+[This is the alt text|http://url.of.image.com/image.jpg]
+
+  The bot records the current IRC topic at the top. This means if you
+  change the topic daily it gets used in indexes, so it serves as
+  day-based metadata. The most recent topic will always be used in the
+  day's XML file, and hence in a resulting page.
+
+  One other useful feature is asking the bot what the status of posts is
+  - especially useful if you have been away from the channel for a while
+  and want to catch up.
+
+  By typing
+
+         dc:view
+
+  ... the bot will show the titles and URLS of the last five (by
+  default) posts.
+
+  Alternatively, typing
+
+         dc:view 2
+
+  ... will just show the last two posts, and so on.
+
+  If you forget any of this, ask the bot for help or more help:
+
+         dc:help
+         dc:morehelp
+
+  These commands can also be executed via querying the bot rather than
+  in the public channel.
+
+4. Advanced usage
+
+  Since we first wrote the chump bot, it has become desirable to add a
+  few more features to enhance usability and flexibility.  These include
+  the ability to edit and remove comments, and to assign keywords to an
+  item.
+
+  Comment editing is done via replacement.  Simply type as would to add
+  a comment, but instead of using, say 'A:', use 'A3:' to replace the
+  third comment, for example.  The numbers of the labels will be shown
+  if you type "A:" on a line on its own in order to view the item.
+
+  Deleting comments is also easy.  To delete the third comment on item
+  A:, you would type:
+
+         A3:""
+
+  Note that all the comments renumber themselves after a deletion, so
+  comment 4 will be at position 3, and so on.
+
+  If you mistype a URL, it can be replaced like this:
+
+         A:= http://newurl.example.com/
+
+  The ability to assign keywords allows more flexibility for an
+  application that might process the XML coming from the chump.  Keyword
+  assignment is easy.  To assign the keywords "xml" and "python" you
+  might type:
+
+         A:->xml,python
+
+  To remove keywords, just type:
+
+         A:->
+
+  Note that keywords is a free text field, you can put what you want in
+  there.  The Chump authors use this facility to pick out chump items
+  for featuring in a photo-log at <http://pants.heddley.com/photos/>.
+
+  The keywords appear inside a <keywords> element in the output XML.
+
+  There are some additional commands executed in the same manner as
+  'view'.  These are:
+
+         die       Cause the bot to quit (synonyms: depart, leave)
+         database  Dump the bot's XML to the channel. Verbose!
+
+5. Addressing and verbosity
+
+  To suit the needs of various channels, the bot is configurable as
+  to how much of an imposition it makes in public.
+
+  If direct addressing is enabled (--address, see INSTALL for more
+  details) then the bot will only respond to public messages prefixed
+  with its name followed by a colon or comma, and optional space. For
+  example:
+
+         dc, view
+         dc, A:|The Title
+
+  Verbosity has three available levels.  The default is to respond in
+  public to each action a user takes.  The second level, private, can
+  be enabled with --private, and diverts all informational and error
+  messages via private message to the user.  The third level, quiet,
+  can be enabled with --quiet, and only ever reports error messages.
+
+6. XML and Archiving
+
+  The bot creates an XML file from each day.  During the day it writes
+  to index.xml in the directory you specified on startup (see the -d
+  option in the INSTALL documentation).  When the first post to the bot
+  after midnight GMT happens, the bot moves the index.xml file to
+  YYYY/MM/DD/YYYY-MM-DD.xml and starts a new index.xml.
+
+  The program extras/indexFiles.py can be used to index all these
+  archived files and create index XML files.
+
+  You will need to create XSLT stylesheets (or use your favourite XML
+  styling mechanism) in order to show the world your weblog.  We used
+  our own version of the Apache mod_xslt module, which is included in
+  this distribution in the extras directory. 
+
+  For help, we've included a bare bones XSLT sheet which uses both the
+  main files and brings in the nav.xml file generated by
+  indexFiles.py. Also included is a simple sheet to display the monthly
+  indexes generated by indexFiles.py.
+
+7. Why the "Daily Chump"?
+
+  The Daily Chump bot was inspired by work done by Bijan Parsia of
+  Monkeyfist <http://monkeyfist.com/DailyChurn/>.  Bijan's bot is written
+  in Squeak, and called the DiaWebLogBot.  We decided to copy his good
+  ideas in Python and add XML output.
+
+8. Chumps we know of
+
+   The list of these is growing too fast to keep up to date in this
+   manual.  Instead consult <http://usefulinc.com/chump/>.
+
+9. Credits
+
+  Matt Biddulph did the Python programming.  Edd Dumbill did the XSLT
+  and web server work, and some later Python hacking.  Giles Turnbull
+  wrote the first version of the manual.  Matt Hunt encouraged, hooted
+  and generally made us laugh.
+
+  Thanks also to Joel Rosdahl, whose Python IRC library we used for the
+  basis of this bot. You can find his library at
+  <http://joel.rosdahl.net/hacks/>.
+
+  Bug fixes were sent in by Kendall Clark and Bijan Parsia. Patches and
+  suggestions have been received from Phil McCarthy, Aaron Swartz, Josh
+  Lucas, Kevin Burton.
+
+  Contact us at <chump@heddley.com>.

@@ -1,0 +1,53 @@
+2002-08-01  Edd Dumbill  <edd@usefulinc.com>
+
+	* Added 'status' command which shows addressing and verbosity
+	levels.
+
+	* Added --address (-r).  Bot only responds in public if it's
+	been addressed by name.
+
+	* Added --private (-i) mode so informational and error messages are
+	sent privately
+
+	* Added --quiet (-q) mode so only error messages are reported
+
+	* Added support for chumping ftp, irc, and news: URLs
+
+	* Added --help and --version commands, GNU style as well as proper
+	short and long getopts style handling.
+
+	* Tidied up punctuation in what the bot says.
+
+	* All commands work via private message as well as in public.
+
+	* Added L:= directive for replacing a mistyped URL (L is label
+	letter).
+
+	* Merged Josh Lucas' patch for specifying passwords to an IRC
+	server.
+
+2002-02-18  Edd Dumbill  <edd@usefulinc.com>
+
+	* Released version 1.1: support for permanent URIs for each item,
+	comment editing and deletion, keywords setting
+
+2001-07-12  Edd Dumbill  <edd@usefulinc.com>
+
+	* src/dailychumpbot.py: added option to specify stylesheet
+	(-e). Made -h display usage information.
+
+	* src/dailychump.py: added support for stylesheets. Fixed bug
+	where os.rename() attempted to rename across volumes. Had to
+	subclass XMLParser in order to make it not barf on the XML
+	stylesheet directive. Future TODO: move the XML handling to be
+	SAX-based.
+
+	* bumped version to 1.02
+
+2001-03-21  Matt Biddulph  <matt@picdiary.com>
+
+	* Fixed a regexp in URL detection, bumped release to 1.01
+
+2001-03-16  Edd Dumbill  <edd@usefulinc.com>
+
+	* Initial release 1.0

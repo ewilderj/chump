@@ -1,0 +1,92 @@
+*** mod_xslt.c	Thu Aug 24 03:05:28 2000
+--- ../modxslt_edd/mod_xslt.c	Fri Mar  9 15:36:04 2001
+***************
+*** 34,39 ****
+--- 34,41 ----
+     20000819 Added XSLTDebug directive and Dynamic Document/Stylesheet
+  	support -- Aidas Kasparas kaspar@soften.ktu.lt
+  
++    20001222 Added XSLTSheetDir directive to keep XSL files in a known
++         directory -- Edd Dumbill edd@usefulinc.com
+   */
+  
+  #include <sys/stat.h>
+***************
+*** 63,68 ****
+--- 65,71 ----
+  const char *mod_xslt_dynss_cmd(cmd_parms *cmd, void *m, int flag);
+  const char *mod_xslt_debug_cmd(cmd_parms *cmd, void *m, int flag);
+  const char *mod_xslt_tmppath_cmd(cmd_parms *cmd, void *m, char * path);
++ const char *mod_xslt_sheetdir_cmd(cmd_parms *cmd, void *m, char * path);
+  
+  command_rec mod_xslt_cmds[] = {
+  { "XSLTDynamicDoc", mod_xslt_dyndoc_cmd, NULL, OR_ALL, FLAG,
+***************
+*** 73,84 ****
+--- 76,91 ----
+      "Is Debugging of transformations allowed"},
+  { "XSLTtmpPath", mod_xslt_tmppath_cmd, NULL, RSRC_CONF, TAKE1,
+      "Path to directory where to store temporary files"},
++ { "XSLTSheetDir", mod_xslt_sheetdir_cmd, NULL, RSRC_CONF, TAKE1,
++     "Path to directory where stylesheets live"},
+  { NULL }
+  };
+  
+  #define MODXSLTTMPPATHLEN 100
+  static mod_xslt_tmppath_isset = 0;
++ static mod_xslt_sheetdir_isset = 0;
+  static char mod_xslt_tmppath[MODXSLTTMPPATHLEN]="";
++ static char mod_xslt_sheetdir[MODXSLTTMPPATHLEN]="";
+  
+  
+  const char *mod_xslt_dyndoc_cmd(cmd_parms *cmd, void *m, int flag){
+***************
+*** 121,126 ****
+--- 128,151 ----
+      return NULL;
+  };
+  
++ const char *mod_xslt_sheetdir_cmd(cmd_parms *cmd, void *m, char * path){
++     struct stat stat;
++     if (*path != '/'){
++ 	return "XLSTSheetDir: directory name should be absolute - start with /\n";
++     }
++     if (lstat(path, &stat)){
++         return "XLSTSheetDir: can't get file's status\n";
++     }
++     if ( strlen(path) >= MODXSLTTMPPATHLEN){
++ 	return "XSLTSheetDir: directory name length is too big\n";
++     }
++ 
++     /* Everything is OK */
++     strcpy(mod_xslt_sheetdir, path);
++     mod_xslt_sheetdir_isset = 1;
++     return NULL;
++ };
++ 
+  char *mod_xslt_mkcfg(pool *p){
+      mod_xslt_cfg *cfg = ap_palloc(p, sizeof(mod_xslt_cfg));
+      cfg->dyndoc = cfg->dynss = 0;
+***************
+*** 374,380 ****
+    tmp2 = strchr(doctype,'>');
+    if (tmp2 != NULL) tmp2[0] = (char)NULL;
+     
+!   xslfilename = ap_pstrcat(r->pool,doctype,"_",mimetype,".xsl",NULL);
+    if (cfg->dynss == 0){
+        xfh = ap_pfopen(r->pool, xslfilename, "r");
+  
+--- 399,411 ----
+    tmp2 = strchr(doctype,'>');
+    if (tmp2 != NULL) tmp2[0] = (char)NULL;
+     
+!   if (mod_xslt_sheetdir_isset) 
+!     xslfilename = ap_pstrcat(r->pool,mod_xslt_sheetdir,"/",
+! 	ap_get_server_name(r),"/",doctype,
+!       "_",mimetype,".xsl",NULL);
+!   else 
+!     xslfilename = ap_pstrcat(r->pool,doctype,"_",mimetype,".xsl",NULL);
+! 
+    if (cfg->dynss == 0){
+        xfh = ap_pfopen(r->pool, xslfilename, "r");
+  

@@ -1,0 +1,7 @@
+These XSLT files should get you going formatting the XML produced
+by the bot and by the indexFiles.py program.  All you need to adjust
+is the path to 'nav.xml' in each stylesheet.
+
+--
+$Id: README,v 1.1 2001/03/16 08:33:33 edmundd Exp $
+

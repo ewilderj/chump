@@ -1,0 +1,18 @@
+indexFiles.py
+
+This Python script will run around your archive of Chump XML files, creating
+index.xml files.  At the root of your tree of XML files it will create a
+nav.xml file.
+
+These files can be used to build up links into an archive. For an example of
+how they might be used, look at the xslt directory of this distribution.
+
+Usage:
+
+  indexFiles.py /path/to/xml/root
+
+(you can also set the 'dir' variable in the source. Ensure the directory 
+you give it is the immediate parent of the year directories).
+
+-- 
+$Id: README.indexFiles,v 1.2 2001/05/17 18:33:24 edmundd Exp $

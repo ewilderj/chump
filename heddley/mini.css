@@ -1,0 +1,41 @@
+body { background-color: #E5E5F7; font-size: 8pt; link: #000070; }
+
+a { color:
+#000070; }
+a:visited { color: #505090; }
+
+blockquote,p { font-family: Verdana,
+Helvetica, Arial;
+    font-size: 11px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-
+bottom: 6px;
+  }
+
+p { margin-top: 18px; }
+blockquote { margin-top: 6px;
+}
+
+.chumpheader { font-weight: bold; font-family: Georgia, Times New
+Roman,
+Times;
+    font-size: 20px; margin-bottom: 0em;
+  }
+
+.title { font-weight: normal;
+font-family: Georgia, Times New Roman,
+Times;
+    font-size: 13px}
+.byline { font-
+size: 11px; }
+.nick { font-weight: bold; }
+.commenter { color: #505090;
+}
+.timestamp { font-size: 12px; color: gray; margin-top: 0px }
+.emph { font-style:
+italic; }
+.imagelink { font-weight: bold; }
+.attribution { font-family: Verdana,
+Helvetica, Arial;
+                        font-size: 9px; color: gray; }

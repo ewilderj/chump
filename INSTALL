@@ -1,0 +1,30 @@
+Daily Chump Bot Installation
+
+  $Id: INSTALL,v 1.7 2003/05/14 12:26:39 edmundd Exp $
+
+The Daily Chump Bot requires Python version 2.1 or greater. Copy all
+the .py files in the src directory to a directory of your choosing and
+run it from that directory with the command:
+
+  python dailychumpbot.py
+
+Usage: dailychumpbot.py [ -h | --help ]
+       dailychumpbot.py [ -v | --version ]
+       dailychumpbot.py OPTIONS
+          
+ -s, --server=STRING      IRC server to connect to. Required.
+ -p, --port=INTEGER       IRC port number (defaults to 6667). Optional.
+ -n, --nick=STRING        Nickname for the bot. Required.
+ -c, --channel=STRING     IRC channel to join. Required. Quote # characters.
+ -d, --dir=STRING         Directory for storing XML.
+ -e, --stylesheet=STRING  Optional stylesheet URL to link from each XML file.
+ -a, --password=STRING    Password to use to connect to IRC server.
+ -i, --private            Send informative and error messages by private
+                          message.
+ -q, --quiet              Never send informative messages (can't be used
+                          with -i).
+ -r, --address            Only respond to public messages that address bot
+                          by name.
+ -u, --utf-8              Read and write UTF-8 rather than Latin-1.
+ -h, --help               Show usage information.
+ -v, --version            Show version information.

@@ -1,0 +1,9 @@
+Daily Chump IRC bot
+
+To install the bot, read INSTALL
+To read about how to use the bot, read MANUAL
+For licensing terms, read LICENSE
+
+The main source is in directory src
+Extra programs which may help you can be found in directory extras
+Sample stylesheets can be found in directory xslt
