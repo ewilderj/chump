@@ -1,4 +1,5 @@
-#!/usr/bin/python    -*- coding: utf-8 -*-
+#!/usr/bin/python  
+# -*- coding: utf-8 -*-
 # Copyright (c) 2001-2004 by
 # Matt Biddulph and Edd Dumbill, Useful Information Company
 # All rights reserved.
