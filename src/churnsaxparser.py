@@ -19,6 +19,114 @@ class LastUpdatedParser(ContentHandler):
     def feed(self, data):
         xml.sax.parseString(data, self)
 
+class ChurnMarkupParser(ContentHandler):
+    def __init__(self):
+        ContentHandler.__init__(self)
+        self._data = ''
+        self._in_a = 0
+        self._a_title = ''
+        self._a_href = ''
+        self._dict=self.__class__.__dict__;
+
+    ### SAX ADAPTERS ###
+
+    def startDocument(self):
+        pass
+
+    def endDocument(self):
+        pass
+
+    def startElement(self, name, attrs):
+        if self._dict.has_key("start_"+name):
+            self._dict["start_"+name](self, attrs)
+        else:
+            self.unknown_starttag(name, attrs)
+
+    def endElement(self, name):
+        if self._dict.has_key("end_"+name):
+            self._dict["end_"+name](self)
+        else:
+            self.unknown_endtag(name)
+
+    def characters(self, content):
+        self.handle_data(content)
+
+    def feed(self, data):
+        xml.sax.parseString(data, self)
+        return self._data
+
+    def close(self):
+        pass
+
+    ### MAIN METHODS ###
+
+    def unknown_endtag(self, name):
+        pass
+
+    def start_markup(self,attrs):
+        self._data = ''
+
+    def start_a(self,attrs):
+        if(attrs.has_key('href')):
+            self._a_href = attrs['href']
+        else:
+            self._a_href = u''
+            for attr in attrs.keys():
+                if attr.find(":href") != -1:
+                    self._a_href = attrs[attr]
+        self._a_title = u''
+        self._in_a = 1
+
+    def start_img(self,attrs):
+        if(attrs.has_key('src')):
+            self._img_src = attrs['src']
+        else:
+            self._img_src = u''
+            for attr in attrs.keys():
+                if attr.find(":src") != -1:
+                    self._img_src = attrs[attr]
+
+        if(attrs.has_key('alt')):
+            self._img_title = attrs['alt']
+        else:
+            self._img_title = u''
+            for attr in attrs.keys():
+                if attr.find(":alt") != -1:
+                    self._img_alt = attrs[attr]
+
+    def start_i(self,attrs):
+        self._data = self._data + u'*'
+
+    def end_i(self):
+        self._data = self._data + u'*'
+
+    def end_img(self):
+        if self._img_title != '' and self._img_src != '' and self._img_src != self._img_title:
+            self._data = self._data + '+[' + self._img_title + '|' + self._img_src + ']'
+        elif self._img_src != '':
+            self._data = self._data + '+[' + self._img_src + ']'
+
+    def end_a(self):
+        if self._a_title != '' and self._a_href != '' and self._a_href != self._a_title:
+            self._data = self._data + '[' + self._a_title + '|' + self._a_href + ']'
+        elif self._a_href != '':
+            self._data = self._data + '[' + self._a_href + ']'
+        self._in_a = 0
+
+    def unknown_starttag(self,tag,attrs):
+        pass
+
+    def end_markup(self):
+        pass
+
+    def handle_data(self,text):
+        if self._in_a == 1:
+            self._a_title = self._a_title + text
+        else:
+            self._data = self._data + text
+
+    def markup(self):
+        return self._data
 
 class ChurnParser(ContentHandler):
     def __init__(self):

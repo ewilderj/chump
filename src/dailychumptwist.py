@@ -286,7 +286,7 @@ def main():
     import sys
     import getopt
     args = sys.argv[1:]
-    optlist, args = getopt.getopt(args,'s:p:c:n:d:e:ha:vqiru',
+    optlist, args = getopt.getopt(args,'s:p:c:n:d:e:ha:vqiruw:x:',
                                   ["server=",
                                    "port=",
                                    "channel=",
@@ -299,7 +299,9 @@ def main():
                                    "quiet",
                                    "private",
                                    "address",
-                                   "utf-8"])
+                                   "utf-8",
+				   "web",
+                                   "xsl"])
     port = 6667
 
     directory = ''
@@ -311,12 +313,22 @@ def main():
     mode = _M_NOTICE
     addressing = _A_GENERAL
     use_unicode = 0
+    web_port = None
+    xsldir = None
 
     for o in optlist:
         name = o[0]
         value = o[1]
         if name in ('-s', '--server'):
             server = value
+        if name in ('-x', '--xsl'):
+            xsldir = value
+        elif name in ('-w', '--web'):
+            try:
+                web_port = int(value)
+            except ValueError:
+                print "Error: Erroneous web port."
+                sys.exit(1)
         elif name in ('-p', '--port'):
             try:
                 port = int(value)
@@ -364,6 +376,16 @@ def main():
         #g.nextkey = 0
         #internet.TCPServer (9999,g).setServiceParent(
         #      servcoll)
+
+	if web_port is not None and xsldir is not None:
+            try:
+                import web
+                web.xsldir = xsldir
+                web.chumproot = directory
+                import quixote.server.twisted_http
+                quixote.server.twisted_http.Server("web",web_port)
+            except ImportError:
+                print "quixote not found, can't start web server"
 
         service.IService(app).startService ()
         reactor.run ()
