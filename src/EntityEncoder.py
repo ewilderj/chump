@@ -1,4 +1,4 @@
-# Copyright (c) 2001 by Matt Biddulph and Edd Dumbill, Useful Information Company
+# Copyright (c) 2001 by Matt Biddulph and Edd Dumbill, Useful Information Company  -*- coding: utf-8 -*-
 # All rights reserved.
 # 
 # License is granted to use or modify this software ("Daily Chump") for
@@ -16,8 +16,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from xmllib import XMLParser
-
 # daily chump v 1.0
 
 # $Id: EntityEncoder.py,v 1.3 2001/03/16 00:52:04 edmundd Exp $
@@ -25,10 +23,8 @@ from xmllib import XMLParser
 class EntityEncoder:
     def __init__(self):
         # create reversed entity list
-        self.rdefs={}
-        for x in XMLParser.entitydefs.keys():
-            v=XMLParser.entitydefs[x]
-            self.rdefs[int(v[2:-1])]="&"+x+";"
+        self.rdefs={'&': '&amp;', '<': '&lt;',
+            '>': '&gt;', '"': '&quot;', "'": '&apos;'}
 
     def encode_chars(self, s):
         out=""
@@ -39,8 +35,8 @@ class EntityEncoder:
             elif (o<32):
                 out=out
                 # strip them out!
-            elif self.rdefs.has_key(o):
-                out=out+self.rdefs[o]
+            elif self.rdefs.has_key(c):
+                out=out+self.rdefs[c]
             else:
                 out=out+c
         return out
