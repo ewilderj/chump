@@ -70,7 +70,6 @@ class SpiderSender(twisted.application.service.Service):
         for transport in self.downloaders.values():
             transport.disconnect()
 
-    # TODO: add support for specifying referrer
     def addTargets(self, targets):
         for target in targets:
             self.queue.append((target, 0))
@@ -85,9 +84,6 @@ class SpiderSender(twisted.application.service.Service):
         while self.queue and (len(self.downloaders) < self.maxDownloaders):
             self.download()
 
-    # TODO: implement a 'read from cache only' mode where
-    # a successful download is simulated from the local cache
-    # we already have
     def download(self):
         uri, depth = self.queue.pop(0)
         host, port, url = _parse(uri)

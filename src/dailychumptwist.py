@@ -36,6 +36,7 @@ from twisted.protocols import irc
 from twisted.internet import reactor, protocol
 from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
+from twisted.web import server, resource
 
 _version="1.99"
 
@@ -59,6 +60,33 @@ class URLPinger (IChumpListener):
             self.spider.reportStatus ()
             self.spider.addTargets ([theurl])
 
+class TellChannelForm(resource.Resource):
+
+    formcontent = """
+<html><head><title>Tell the chump</title></head>
+<body><p>%s</p>
+<form method="post" action="/"><input type="text" length="30" name="saywhat" />
+<input type="submit" name="submit" value="Say" /></form>
+</body></html>
+"""
+    
+    def getChild(self, name, request):
+        if name == '':
+            return self
+        return resource.Resource.getChild (self, name, request)
+
+    def render_GET(self, request):
+        return TellChannelForm.formcontent % ( "Talk to the chump", )
+
+    def render_POST(self, request):
+        print request.args
+        if self.chump.__dict__.has_key ('bot'):
+            self.chump.bot.notice_multiline ("Someone says '%s'" %
+                    (request.args['saywhat'][0],))
+        return TellChannelForm.formcontent % ( "You said '" + 
+                request.args['saywhat'][0]  + "'.", )
+
+
 class DailyChumpTwist(irc.IRCClient,IChumpListener):
     def __init__(self, chump, channel, nickname,
                  sheet=None, password=None,
@@ -68,6 +96,10 @@ class DailyChumpTwist(irc.IRCClient,IChumpListener):
         self.channel = channel
         self.foocount = 0
         self.chump = chump
+        # relative hack: make the chump aware there's
+        # an IRC bot connected. TODO: this ought to be
+        # part of the Chump API and manage a list of bots
+        self.chump.bot = self
         self._mode=mode
         self._addressing=addressing
         self.use_utf8 = use_unicode
@@ -226,6 +258,14 @@ class DailyChumpTwist(irc.IRCClient,IChumpListener):
 
         return None
 
+class TellChannelSite(server.Site):
+
+    def __init__(self, chump):
+        self.chump = chump
+        t = TellChannelForm ()
+        t.chump = chump
+        server.Site.__init__ (self, t)
+
 class DailyChumpTwistFactory(protocol.ClientFactory):
  
     protocol = DailyChumpTwist
@@ -263,6 +303,7 @@ class OneTimeKey(Protocol):
         self.transport.write("%d\n" % key)
         self.transport.loseConnection()
         _chumpbot.notice_multiline("%d" % key)
+
 
 def usage(invokedas):
     print """`%s' runs a weblog from an IRC channel.
@@ -321,7 +362,8 @@ def main():
                                    "utf-8",
                                    "web",
                                    "xsl",
-                                   "pingurl="])
+                                   "pingurl=",
+                                   "formchatport="])
     port = 6667
 
     directory = ''
@@ -336,6 +378,7 @@ def main():
     use_unicode = 0
     web_port = None
     xsldir = None
+    formchatport = None
 
     for o in optlist:
         name = o[0]
@@ -382,6 +425,8 @@ def main():
             sys.exit(0)
         elif name in ('--pingurl'):
             pingurl = value
+        elif name in ('--formchatport'):
+            formchatport = value
 
     from dailychumptwist import DailyChumpTwistFactory, DailyChumpTwist
     if(directory != '' and channel != '' and
@@ -396,11 +441,10 @@ def main():
                 servcoll)
         if pingurl is not None:
             chump.add_listener (URLPinger(servcoll, pingurl))
-        #g = Factory()
-        #g.protocol = OneTimeKey
-        #g.nextkey = 0
-        #internet.TCPServer (9999,g).setServiceParent(
-        #      servcoll)
+
+        if formchatport is not None:
+            g = TellChannelSite (chump)
+            reactor.listenTCP (formchatport, g)
 
 	if web_port is not None and xsldir is not None:
             try:
