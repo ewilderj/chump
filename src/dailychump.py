@@ -59,7 +59,7 @@ class ChumpInfoResponse(ChumpResponse):
     pass
 
 class Churn:
-    def __init__(self,directory,use_unicode=0):
+    def __init__(self,directory,use_unicode=0, save_notify=None):
         self.database = {}
         self.directory = directory
         self.labelcount = 0
@@ -71,7 +71,7 @@ class Churn:
         self._day = 0
         self._relative_uri=""
         self.use_utf8 = use_unicode
-        self._ping_url = ""
+        self.save_notify = save_notify
 
     def set_update_time(self,time):
         self.updatetime = time
@@ -85,8 +85,8 @@ class Churn:
     def get_relative_uri(self):
         return self._relative_uri
 
-    def set_ping_url (self, url):
-        self._ping_url = url
+    def set_save_notify (self, notify):
+        self.save_notify (notify)
 
     def get_topic(self):
         return self.topic
@@ -288,14 +288,8 @@ class Churn:
         shutil.copy(name,self._filename())
         shutil.copy(name,self.get_archive_filename())
         os.unlink(name)
-        self.ping (self.get_archive_filename())
-
-    def ping(self, fname):
-        """provide simple mechanism for notifying of updates"""
-        if self._ping_url != "":
-            theurl = self._ping_url + urllib.quote (fname, '')
-            print theurl
-            urllib.urlretrieve (theurl)
+        if self.save_notify is not None:
+            self.save_notify (self.get_archive_filename())
 
     def set_archive_filename(self,fname):
         self.archive_filename=fname
@@ -502,14 +496,14 @@ class ChurnEntry:
             self.comments.remove(self.comments[commentno])
 
 class IChumpListener:
-    def notify (event, arg):
+    def notify (self, event, arg):
         pass
 
 class DailyChump:
     def __init__(self, directory, use_unicode=0):
         self.archiver = FileArchiver(directory)
-        self.churn = self.archiver.retrieve_churn(use_unicode)
         self.listeners = []
+        self.churn = self.archiver.retrieve_churn (use_unicode, self.churn_saved)
 
     def add_listener(self, listener):
         if 'notify' in dir(listener):
@@ -523,6 +517,10 @@ class DailyChump:
         else:
             raise Exception("Attempt to remove non-existent listener")
 
+    def churn_saved(self, fname):
+        for listener in self.listeners:
+            listener.notify ("saved", fname)
+
     def set_topic(self,topic):
         self.churn = self.archiver.archive_if_necessary(self.churn)
         self.churn.set_topic(topic)
@@ -535,9 +533,6 @@ class DailyChump:
 
     def set_stylesheet(self, sheet):
         self.churn.set_stylesheet(sheet)
-
-    def set_ping_url(self, url):
-        self.churn.set_ping_url(url)
 
     def process_input(self,nick,msg):
         um = urlmatch.match(msg)
@@ -612,15 +607,15 @@ class FileArchiver:
         oldsheet = churn.get_stylesheet()
         if self.should_archive(date):
             # create a new churn
-            churn = Churn(self.directory, churn.use_utf8)
+            churn = Churn(self.directory, churn.use_utf8, churn.save_notify)
             churn.set_archive_filename(self.prepare_filename(time.time()))
             churn.set_relative_uri(self.prepare_relative_uri(time.time()))
             if oldsheet!="":
                 churn.set_stylesheet(oldsheet)
         return churn
 
-    def retrieve_churn(self, use_unicode=0):
-        churn = Churn(self.directory, use_unicode)
+    def retrieve_churn(self, use_unicode=0, save_notify=None):
+        churn = Churn(self.directory, use_unicode, save_notify)
 
         if os.path.isfile(self.filename):
             date = self.get_date(self.filename)
