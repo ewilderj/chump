@@ -65,8 +65,9 @@ class TellChannelForm(resource.Resource):
     formcontent = """
 <html><head><title>Tell the chump</title></head>
 <body><p>%s</p>
-<form method="post" action="/"><input type="text" length="30" name="saywhat" />
-<input type="submit" name="submit" value="Say" /></form>
+<form method="post" action="/">Your name <input type="text" size="10" name="who" value="%s" /><br />
+Comment <input type="text" size="30" name="saywhat" /> <br />
+<input type="submit" name="submit" value="Say it!" /></form>
 </body></html>
 """
     
@@ -76,15 +77,31 @@ class TellChannelForm(resource.Resource):
         return resource.Resource.getChild (self, name, request)
 
     def render_GET(self, request):
-        return TellChannelForm.formcontent % ( "Talk to the chump", )
+        return TellChannelForm.formcontent % ( "Talk to the chump", "" )
 
     def render_POST(self, request):
-        print request.args
-        if self.chump.__dict__.has_key ('bot'):
-            self.chump.bot.notice_multiline ("Someone says '%s'" %
-                    (request.args['saywhat'][0],))
-        return TellChannelForm.formcontent % ( "You said '" + 
-                request.args['saywhat'][0]  + "'.", )
+        if request.args.has_key ('saywhat') and request.args['saywhat'][0] != '':
+            wot = request.args['saywhat'][0]
+            if request.args.has_key ('who') and request.args['who'][0] != '':
+                whosaid = request.args['who'][0]
+                whosaidrender = "User '" + whosaid + "'"  
+            else:
+                whosaid = request.client.host
+                whosaidrender = '[' + whosaid + ']'
+            if self.chump.__dict__.has_key ('bot'):
+                self.chump.bot.notice_multiline ("%s says '%s'" %
+                        (whosaidrender, wot))
+            return TellChannelForm.formcontent % ( "You said '" + 
+                    wot + "'.", whosaid)
+        return self.render_GET(request)
+
+class TellChannelSite(server.Site):
+
+    def __init__(self, chump):
+        self.chump = chump
+        t = TellChannelForm ()
+        t.chump = chump
+        server.Site.__init__ (self, t)
 
 
 class DailyChumpTwist(irc.IRCClient,IChumpListener):
@@ -258,14 +275,6 @@ class DailyChumpTwist(irc.IRCClient,IChumpListener):
 
         return None
 
-class TellChannelSite(server.Site):
-
-    def __init__(self, chump):
-        self.chump = chump
-        t = TellChannelForm ()
-        t.chump = chump
-        server.Site.__init__ (self, t)
-
 class DailyChumpTwistFactory(protocol.ClientFactory):
  
     protocol = DailyChumpTwist
@@ -426,7 +435,7 @@ def main():
         elif name in ('--pingurl'):
             pingurl = value
         elif name in ('--formchatport'):
-            formchatport = value
+            formchatport = int(value)
 
     from dailychumptwist import DailyChumpTwistFactory, DailyChumpTwist
     if(directory != '' and channel != '' and
