@@ -1,3 +1,19 @@
+2004-12-13  Edd Dumbill <edd@usefulinc.com>
+
+	* EntityEncoderU.py, EntityEncoder.py: remove dependency on
+	xmllib, add 'coding:' magicomment.
+
+	* churnparser.py: delete as obsoleted by churnsaxparser.py
+
+	* dailychumptwist.py: Fix for Twisted 1.3's API.
+	Reordered things so DailyChurn object is created independently of
+	the protocol factories.
+	
+	* dailychump.py: Added a listener mechanism API so that the
+	protocols can register as listeners for Churn events when they
+	happen.  Define listener interface as IChumpListener.
+
+
 2002-08-01  Edd Dumbill  <edd@usefulinc.com>
 
 	* Added 'status' command which shows addressing and verbosity
