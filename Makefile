@@ -1,6 +1,6 @@
 #$Id: Makefile,v 1.20 2003/05/14 12:59:35 edmundd Exp $
 
-VERSION=1.3
+VERSION=2.0
 
 dist:
 	rm -rf /tmp/chump-${VERSION}
