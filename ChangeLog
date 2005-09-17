@@ -1,3 +1,11 @@
+2005-09-17  Edd Dumbill <edd@usefulinc.com>
+
+	* Catch-up.  Too much magic has happened since the last entry.
+	The main news is that with Quixote the Chump can now serve its
+	own web pages if you want it to, and that it can ping a URL of
+	your choice when the XML is updated--thereby allowing real-time
+	indexing or things like that.
+
 2004-12-14  Edd Dumbill <edd@usefulinc.com>
 
 	* Updated INSTALL and manual page.

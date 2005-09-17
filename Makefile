@@ -7,6 +7,7 @@ dist:
 	mkdir /tmp/chump-${VERSION}
 	mkdir /tmp/chump-${VERSION}/extras
 	mkdir /tmp/chump-${VERSION}/src
+	mkdir /tmp/chump-${VERSION}/src/web
 	mkdir /tmp/chump-${VERSION}/xslt
 	cp MANUAL /tmp/chump-${VERSION}
 	cp LICENSE /tmp/chump-${VERSION}
@@ -14,8 +15,9 @@ dist:
 	cp INSTALL /tmp/chump-${VERSION}
 	cp VERSION /tmp/chump-${VERSION}
 	cp ChangeLog /tmp/chump-${VERSION}
-	cp extras/[^C]* src/*.1 /tmp/chump-${VERSION}/extras
-	cp src/*.py /tmp/chump-${VERSION}/src
+	cp extras/* /tmp/chump-${VERSION}/extras
+	cp src/*.* src/dailychump src/Makefile /tmp/chump-${VERSION}/src/
+	cp src/web/* /tmp/chump-${VERSION}/src/web/
 	cp xslt/*.xsl /tmp/chump-${VERSION}/xslt
 	cp xslt/*.css /tmp/chump-${VERSION}/xslt
 	cp xslt/README /tmp/chump-${VERSION}/xslt

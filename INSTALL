@@ -1,10 +1,19 @@
 Daily Chump Bot Installation
 
 The Daily Chump Bot requires Python version 2.2 or greater and version 1.3 of
-the Twisted framework. Copy all the .py files in the src directory to a
-directory of your choosing and run it from that directory with the command:
+the Twisted framework. 
 
-  python dailychumptwist.py
+If you want it to serve its own web pages then you must have Quixote installed.
+
+Install the software by changing directory to the 'src' directory and
+running make install.  By default, this will install to /usr/local. To install
+elsewhere, specify the path on the command line like this:
+
+  make install DESTDIR=/opt/chump
+
+To run the bot, simply invoke the 'dailychump' command.
+
+  dailychump
 
 Usage: src/dailychumptwist.py [ -h | --help ]
        src/dailychumptwist.py [ -v | --version ]
