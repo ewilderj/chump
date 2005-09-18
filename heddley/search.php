@@ -3,6 +3,7 @@ $style_base = '/home/pants/share/xslt/';
 header("Content-type: text/html; charset=utf-8");
 
 $url="http://localhost:1079/SearchXML.aspx?basedir=/home/pants/var/chumpindex&query=";
+$sorturl="http://localhost:1079/SearchXMLSort.aspx?basedir=/home/pants/var/chumpindex&sortfield=unixtime&sortfieldtype=float&sortfieldreverse=true&query=";
 $sayurl="http://localhost:1078/";
 
 $query=($_GET["query"] ? $_GET["query"] : $_POST["query"]);
@@ -32,6 +33,7 @@ if ($query) {
 		$query=preg_replace ("/,/", " AND ", $query);
 		$query=preg_replace ("/\|/", " ", $query);
 		$lquery="keywords:(${query})";
+		$url = $sorturl . urlencode ($lquery);
 	} else {
 		$query=preg_replace ("/:/", "\\:", $query);
 		$lquery="title:(${query}) OR comment:(${query})";
@@ -48,9 +50,9 @@ if ($query) {
 			curl_exec($ch);
 			curl_close ($ch);
 		}
+		$url = $url . urlencode ($lquery);
 	}
 
-	$url = $url . urlencode ($lquery);
 
 	$ch = curl_init ($url);
 	curl_setopt ($ch, CURLOPT_HEADER, 0);
