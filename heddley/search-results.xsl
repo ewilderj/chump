@@ -16,6 +16,9 @@
   doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
   />
 
+<xsl:param name="searchphrase" />
+<xsl:param name="mode" />
+
 <xsl:template match="rdf:RDF">
 <xsl:apply-templates select="rss:item[1]" />
 <xsl:apply-templates select="rss:item[2]" />
@@ -40,8 +43,28 @@
 <div id="timestamp">last updated at <xsl:value-of select="."/></div>
 </xsl:template>
 
-<xsl:template match="topic">
-<div id="topic"><xsl:value-of select="."/></div>
+<xsl:template name="searchbox">
+<form  method="get" action="http://pants.heddley.com/search">
+<div id="mainsearch">
+    <input tabindex="1" class="txt" type="text" size="20" name="query" value="{$searchphrase}"/>
+    <input tabindex="2" class="btn" type="submit" value="Search" />
+</div>
+</form>
+</xsl:template>
+
+<xsl:template match="result">
+<xsl:variable name="unixtime" select="field[@name='unixtime']" />
+
+<xsl:choose>
+<xsl:when test="field[@name='uristub']">
+<xsl:apply-templates select="document(concat(concat('file:///home/pants/public_html/', field[@name='uristub']),'.xml'))/churn/link[string(time/@value)=$unixtime]" />
+</xsl:when>
+
+<xsl:otherwise>
+<xsl:apply-templates select="document(concat(concat('file:///home/pants/public_html/', concat (translate(substring-before(field[@name='time'], ' '), '-', '/'), concat ('/', substring-before(field[@name='time'], ' ')))), '.xml'))/churn/link[string(time/@value)=$unixtime]" />
+</xsl:otherwise>
+</xsl:choose>
+
 </xsl:template>
 
 <xsl:template match="link">
@@ -75,7 +98,7 @@ at <span class="time"><xsl:value-of select="time"/></span>
 (<a href="/{//relative-uri-stub/@value}.html#{time/@value}">+</a>)
 </xsl:when>
 <xsl:otherwise>
-(<a href="#{time/@value}">+</a>)
+(<a href="{translate(substring-before(time, ' '), '-', '/')}/{substring-before(time, ' ')}.html#{time/@value}">+</a>)
 </xsl:otherwise>
 </xsl:choose>
 <xsl:apply-templates select="keywords">
@@ -153,9 +176,9 @@ at <span class="time"><xsl:value-of select="time"/></span>
 <div class="shadowbox">
 <div id="nav">
 <h1 id="search">search</h1>
-<form method="get" action="http://dailychump.org/search">
+<form method="get" action="http://pants.heddley.com/search">
 <div id="searchform">
-    <input class="txt" type="text" size="8" name="query" value="ocntrol" onfocus="if(this.value=='ocntrol')this.value=''"/>
+    <input class="txt" type="text" size="8" name="query" value="{$searchphrase}" />
 <input class="btn" type="submit" value="Go" />
     </div>
 </form>
@@ -164,7 +187,7 @@ at <span class="time"><xsl:value-of select="time"/></span>
 <xsl:apply-templates select="recent"/>
 </div>
 <h1>older chumps</h1>
-<form method="get" action="http://dailychump.org/archive">
+<form method="get" action="http://pants.heddley.com/archive">
 <div class="archive">
 <select name="month">
 <xsl:apply-templates select="year/month"/>
@@ -177,7 +200,7 @@ at <span class="time"><xsl:value-of select="time"/></span>
 
 </xsl:template>
 
-<xsl:template match="/churn">
+<xsl:template match="/results|/error|/noterms">
 <html>
 <head>
 <link title="nuskool" type="text/css" href="/nu.css" rel="stylesheet" media="screen" />
@@ -185,9 +208,15 @@ at <span class="time"><xsl:value-of select="time"/></span>
 <link title="dogs in hats" type="text/css" href="/doghat.css" rel="alternate stylesheet" media="screen" />
 <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
-<link rel="alternate" type="application/rss+xml" title="The RSS of the Pants Daily Chump" href="http://dailychump.org/index.rss"/>
-<script type="text/javascript" src="/cake.js">/* */</script>
-<title>The PANTS Daily Chump, last cranked at <xsl:value-of select="last-updated" /></title>
+<script type="text/javascript" src="/cake.js" language="JavaScript">/* */</script>
+<xsl:choose>
+	<xsl:when test="$mode = 'keywords'">
+		<title>The PANTS Daily Chump: fauxonomic tagspace<xsl:if test="$searchphrase"> for '<xsl:value-of select="$searchphrase"/>'</xsl:if></title>
+	</xsl:when>
+	<xsl:otherwise>
+		<title>The PANTS Daily Chump: Search Results</title>
+	</xsl:otherwise>
+</xsl:choose>
 </head>
 <body>
 <div id="all">
@@ -198,19 +227,77 @@ at <span class="time"><xsl:value-of select="time"/></span>
 <xsl:apply-templates select="document('file:///home/pants/public_html/nav.xml')" />
 </div> <!-- /side -->
 <div id="main">
-<xsl:apply-templates/>
-<!-- <xsl:if test="count(link)&lt;5">
-	<xsl:variable name="yesterdaypath" select="document('file:///home/pants/public_html/nav.xml')/nav/recent[2]" />
-	<xsl:variable name="yesterday" select="translate($yesterdaypath,'/','-')" />
-	<xsl:variable name="makeup" select="5-count(link)" />
-	<xsl:variable name="filename" select="concat('file:///home/pants/public_html/',concat($yesterdaypath,concat('/',concat($yesterday,'.xml'))))" />
-	<xsl:variable name="yesterdayxml" select="document($filename)/churn/link[position()&lt;=$makeup]"/>
-	<xsl:apply-templates select="$yesterdayxml"/>
-</xsl:if> -->
-
+	<xsl:choose>
+		<xsl:when test="/results">
+			<xsl:choose>
+				<xsl:when test="$mode = 'keywords'">
+					<div id="timestamp">hot from the pantsphere fauxonomy</div>
+					<div id="topic">found <xsl:value-of select="@count"/><xsl:text> </xsl:text>
+						<xsl:choose>
+							<xsl:when test="@count = '1'">item</xsl:when>
+							<xsl:otherwise>items</xsl:otherwise>
+						</xsl:choose>
+						tagged with '<xsl:value-of select="$searchphrase"/>'
+					</div>
+				</xsl:when>
+				<xsl:otherwise>
+					<div id="timestamp">your search found <xsl:value-of select="@count"/><xsl:text> </xsl:text>
+						<xsl:choose>
+							<xsl:when test="@count = '1'">result</xsl:when>
+							<xsl:otherwise>results</xsl:otherwise>
+						</xsl:choose>
+					</div>
+					<div id="topic">coming up... those search results in full</div>
+					<xsl:call-template name="searchbox" />
+					<br />
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:apply-templates/>
+		</xsl:when> <!-- end of results -->
+		<xsl:when test="/noterms">
+			<xsl:choose>
+				<xsl:when test="$mode = 'keywords'">
+					<div id="timestamp">no tag supplied. pecans to you.</div>
+					<div id="topic">sit down, and we'll tell you all about it</div>
+					<div class="item">
+					<div class="title"><a id="howto">Chump tagsearch instructinos</a></div>
+					<div class="byline">posted by <span class="nick">phl</span>
+					at <span class="time">2005-03-08 01:26</span>
+					(<a href="/tag/#howto">+</a>)
+					<xsl:call-template name="keyword">
+						<xsl:with-param name="unixtime" select="0"/>
+						<xsl:with-param name="kw"/>
+						<xsl:with-param name="tail">chump,meta,tagging</xsl:with-param>
+					</xsl:call-template>
+					</div>
+					<div class="comments">
+					<span class="commenter nick-phl">phl: </span><span class="comment">You can search for items tagged with keywords by typing stuff into the address-bar.</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment">For instance, if you go to <a href="/tag/cat">/tag/cat</a>, you can see all the items with "cat" as a keyword.</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment">To search with multiple terms, use a comma between each keyword:</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment"><a href="/tag/photos,cat">/tag/photos,cat</a> will probably find photos of cats.</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment">You can also use | to search for one thing or another:</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment"><a href="/tag/beards|cheese|drumnbass">/tag/beards|cheese|drumnbass</a> finds items to do with beards, cheese, or drum'n'bass.</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment">Finally, you can use parentheses to group terms:</span><br/>
+					<span class="commenter nick-phl">phl: </span><span class="comment"><a href="/tag/photos,(cat|dog)">/tag/photos,(cat|dog)</a> looks for items that are tagged with photos, and either cat or dog.</span><br/>
+					</div>
+					</div>
+				</xsl:when>
+				<xsl:otherwise>
+					<div id="topic">You need to search for something, silly.</div>
+					<xsl:call-template name="searchbox" />
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:otherwise>
+			<p>Sorry, an error occurred while searching.</p>
+			<xsl:comment>
+				<xsl:value-of select="/error" />
+			</xsl:comment>
+		</xsl:otherwise>
+	</xsl:choose>
 </div> <!-- /main -->
 </div> <!-- /all -->
-<div id="attribution">Copyright &#169; The PANTS Collective. Created by the <a href="http://usefulinc.com/chump/">Chump Bot</a>. A <a href="http://usefulinc.com">Useful</a> Production. <a href="mailto:chump&#64;heddley&#46;com">Contact us</a>. <a href="http://dailychump.org/index.rss">Grab our RSS</a>.</div>
+<div id="attribution">Copyright &#169; The PANTS Collective. Created by the <a href="http://usefulinc.com/chump/">Chump Bot</a>. A <a href="http://usefulinc.com">Useful</a> Production. <a href="mailto:chump&#64;heddley&#46;com">Contact us</a>.</div>
 </body>
 </html>
 </xsl:template>

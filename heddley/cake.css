@@ -1,0 +1,37 @@
+
+div#cake-results {
+
+	background: #fff;
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #ccc;
+	/* -moz-border-radius: 2px; sometimes causes extra thick bottom border */
+	width: auto;
+	height: auto;
+	margin: 3.45ex 0px 3.45ex -0.6em;
+	padding: 0 1.5em 0.1em 0.6em;
+	max-width: 30em;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	font-size: 70%;
+}
+
+p.cake-para {
+	text-indent: -0.75em;
+	padding: 0 0 0 0.75em;
+	margin: 0.4em 0;
+}
+
+span.cake-no-results {
+	color: #666;
+	font-style: italic;
+}
+
+span.cake-result-date {
+	color: #666;
+	font-size: 75%;
+	white-space: nowrap;
+}

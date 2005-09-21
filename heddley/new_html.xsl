@@ -6,7 +6,6 @@
   xmlns:admin="http://webself.net/mvcb/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="rdf dc admin rss"
   version="1.0"
   >
 
@@ -41,6 +40,61 @@
 
 <xsl:template match="topic">
 <div id="topic"><xsl:value-of select="."/></div>
+</xsl:template>
+
+<xsl:template match="link">
+<div id="d{time/@value}" class="item">
+<div class="title">
+<a name="{translate(time,' ','_')}" id="a{translate(time,' ','_')}"></a>
+<a name="{time/@value}" id="a{time/@value}"></a>
+<xsl:choose>
+<xsl:when test="@type='blurb'">
+<xsl:value-of select="title" />
+</xsl:when>
+<xsl:otherwise>
+<a href="{url}">
+<xsl:choose>
+<xsl:when test="title">
+<xsl:value-of select="title" />
+</xsl:when>
+<xsl:otherwise>
+<xsl:value-of select="url" />
+</xsl:otherwise>
+</xsl:choose>
+</a>
+</xsl:otherwise>
+</xsl:choose>
+</div>
+<div class="byline">
+posted by <span class="nick"><xsl:value-of select="nick"/></span>
+at <span class="time"><xsl:value-of select="time"/></span>
+<xsl:choose>
+<xsl:when test="//relative-uri-stub">
+<xsl:value-of select="//relative-uri-stub" />
+(<a href="/{//relative-uri-stub/@value}.html#{time/@value}">+</a>)
+</xsl:when>
+<xsl:otherwise>
+(<a href="#{time/@value}">+</a>)
+</xsl:otherwise>
+</xsl:choose>
+</div>
+<div class="comments">
+<xsl:for-each select="comment">
+<xsl:choose>
+<xsl:when test="starts-with(.,'/me ')">
+<span class="commenter"><xsl:value-of select="@nick"/>
+<xsl:text> </xsl:text>
+<xsl:value-of select="substring-after(., '/me ')"/></span>
+</xsl:when>
+<xsl:otherwise>
+<span class="commenter"><xsl:value-of select="@nick"/>: </span>
+<span class="comment"><xsl:apply-templates/></span>
+</xsl:otherwise>
+</xsl:choose>
+<br />
+</xsl:for-each>
+</div><!-- /comments -->
+</div><!-- /item -->
 </xsl:template>
 
 <xsl:template match="img">
@@ -94,7 +148,7 @@
 <div class="shadowbox">
 <div id="nav">
 <h1 id="search">search</h1>
-<form method="post" action="http://pants.heddley.com/search">
+<form method="get" action="http://pants.heddley.com/search">
 <div id="searchform">
     <input class="txt" type="text" size="8" name="query" value="ocntrol" />
 <input class="btn" type="submit" value="Go" />
@@ -118,15 +172,13 @@
 
 </xsl:template>
 
-<xsl:template match="day">
-<li><a href="{@href}"><xsl:value-of select="."/></a></li>
-</xsl:template>
-
-<xsl:template match="/month">
+<xsl:template match="/churn">
 <html>
 <head>
-<link title="nuskool" type="text/css" href="http://pants.heddley.com/nu.css" rel="stylesheet" media="screen" />
-<title>The PANTS Daily Chump Archive For <xsl:value-of select="@name" /></title></head>
+<link title="nuskool" type="text/css" href="/nu.css" rel="stylesheet" media="screen" />
+<title>The PANTS Daily Chump, last cranked at <xsl:value-of select="last-updated" /></title>
+<base href="http://pants.heddley.com/"/>
+</head>
 <body>
 <div id="all">
 <div id="logo">
@@ -136,10 +188,7 @@
 <xsl:apply-templates select="document('file:///home/pants/public_html/nav.xml')" />
 </div> <!-- /side -->
 <div id="main">
-<h4>Archive for <xsl:value-of select="@name"/></h4>
-<ul class="monthindex">
-<xsl:apply-templates select="day" />
-</ul>
+<xsl:apply-templates/>
 </div> <!-- /main -->
 </div> <!-- /all -->
 <div id="attribution">Copyright &#169; The PANTS Collective. Created by the <a href="http://usefulinc.com/chump/">Chump Bot</a>. A <a href="http://usefulinc.com">Useful</a> Production. <a href="mailto:chump&#64;heddley&#46;com">Contact us</a>.</div>

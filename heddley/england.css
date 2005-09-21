@@ -1,0 +1,36 @@
+
+body { background-color: white; font-size: 13pt; link: #900000;
+   color: #900000}
+
+a { color: #700000; }
+a:visited { color: #905050; }
+
+blockquote,p { font-family: Verdana, Helvetica, Arial; 
+    font-size: 0.9em; 
+  }
+
+h4 { font-family: Verdana, Helvetica, Arial; 
+    font-size: 0.8em; 
+  }
+
+.title { font-weight: normal; font-family: Georgia, Times New Roman, Times;
+    font-size: 1.2em}
+.topic { font-weight: normal; font-style: italic; color: #900000; 
+         font-size: 1.3em; font-family: Georgia, Times New Roman, Times; }
+.byline { font-size: 0.8em; }
+.nick { font-weight: bold; }
+.commenter { color: #905050; }
+.timestamp { font-size: 0.8em; color: #dd8888; }
+.attribution { font-family: Verdana, Helvetica, Arial;
+			font-size: 0.7em; color: gray; }
+.archive { font-family: Verdana, Helvetica, Arial;
+			font-size: 0.8em; color: gray; }
+.pframe { text-align: center; margin-left: 4px; margin-right: 4px; padding-bottom: 5px; padding-top: 5px;  }
+.ppic { border: solid black 1px; }
+.clogo { border: none; margin-bottom: 5px; text-align: center;  }
+.cgraph { background-color: #ddaaaa; padding: 4px; border: solid black 1px;
+         text-align: center; }
+.carchive { font-family: Verdana, Helvetica, Arial;
+	font-size: 0.8em; font-weight: bold; text-align: center; }
+.carchivel:link { color: #555555; }
+.carchivel:visited { color: #555555; }

@@ -5,7 +5,9 @@ $sheets=array(
 	'day'   => 'churn_html.xsl',
 	'month' => 'month_html.xsl',
 	'mini' => 'churn_mini.xsl',
-	'rss'	=> 'churn_rss.xsl');
+	'rss'	=> 'churn_rss.xsl',
+	'new'	=> 'new_html.xsl',
+	'rdf'	=> 'RDF_html.xsl');
 
 $types=array(
 	'day'	=> 'text/html; charset=utf-8',
@@ -13,8 +15,9 @@ $types=array(
 	'rss'	=> 'application/rdf+xml');
 
 
+$type=$_GET['type'];
 # chop off leading / and ../ -- secure the service
-$fname=preg_replace("/^\//", "", $fname);
+$fname=preg_replace("/^\//", "", $_GET['fname']);
 $fname=preg_replace("/(\.\.\/)*/", "", $fname);
 
 # replace suffix with .xml
@@ -50,12 +53,13 @@ if (file_exists($fname)) {
 		print $result;
 	} else {
 		print "Sorry, an error occurred while transforming this page.\n;";
-		print "Error: ". xslt_error($xh) . " (" . xslt_errno($xh). ").";
+		print "Error: ". xslt_error($xh) . " (" . xslt_errno($xh). ").\n";
+		print "fname $fname sname $sname\n";
 	}
 	xslt_free($xh);
 } else {
 	// TODO -- make it a 404
 	header("Content-type: text/plain");
-	print "File not found.";
+	print "File not found.[ $fname ]";
 }
 ?>

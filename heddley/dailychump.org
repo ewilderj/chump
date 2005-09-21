@@ -1,0 +1,26 @@
+<VirtualHost *:80>
+ServerAdmin webmaster@heddley.com
+DocumentRoot /home/pants/public_html
+ServerName dailychump.org
+ServerAlias www.dailychump.org
+CustomLog "|/usr/sbin/rotatelogs /home/pants/logs/access_log 86400" combined
+ErrorLog "|/usr/sbin/rotatelogs /home/pants/logs/error_log 86400"
+DirectoryIndex index.php index.html
+RewriteEngine on
+#RewriteLog "/home/pants/logs/rewrite_log"
+#RewriteLogLevel 4
+RewriteRule ^/archive /%{QUERY_STRING}? [N]
+RewriteRule ^/month=([0-9]{4})([0-9]{2}) /$1/$2/ [R,L]
+RewriteRule ^/search/?\?(.*)$ /search.php?$1 [L]
+#RewriteRule ^/((.*).html) /style.php?fname=$1 [L]
+#RewriteRule ^/((.*).rss)$ /style.php?fname=$1&type=rss [L]
+RewriteRule ^/((.*).mini) /style.php?fname=$1&type=mini [L]
+RewriteRule ^/logica/$ /style.php?fname=/logica/index.xml&type=rdf [L]
+RewriteRule ^/tag/(.*) /search.php?mode=keywords&query=$1 [L,QSA]
+
+# for new chump server
+RewriteRule ^/$ http://dailychump.org:9999/ [L,P]
+RewriteRule ^/index.rss$ http://dailychump.org:9999/index.rss [L,P]
+RewriteRule /2(.*) http://dailychump.org:9999/2$1 [L,P]
+
+</VirtualHost>

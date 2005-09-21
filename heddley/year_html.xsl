@@ -118,11 +118,11 @@
 
 </xsl:template>
 
-<xsl:template match="day">
+<xsl:template match="month">
 <li><a href="{@href}"><xsl:value-of select="."/></a></li>
 </xsl:template>
 
-<xsl:template match="/month">
+<xsl:template match="/year">
 <html>
 <head>
 <link title="nuskool" type="text/css" href="http://pants.heddley.com/nu.css" rel="stylesheet" media="screen" />
@@ -138,7 +138,7 @@
 <div id="main">
 <h4>Archive for <xsl:value-of select="@name"/></h4>
 <ul class="monthindex">
-<xsl:apply-templates select="day" />
+<xsl:apply-templates select="month" />
 </ul>
 </div> <!-- /main -->
 </div> <!-- /all -->

@@ -1,0 +1,293 @@
+
+* {
+  font-family: verdana, sans-serif;
+  color: black;
+}
+
+img {
+  width: 0% !important;
+  height : 0% !important;
+  background-image: url(http://chimpen.com/images/dog-top-hat.jpg);
+  background-repeat: none;
+  padding: 271px 200px 0px 0px !important;
+}
+
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 18px;
+}
+
+a:link {
+  color: #d46; 
+}
+
+a:visited {
+  color: #fa5; 
+}
+
+div#all {
+  background: #fff;
+  margin: 9pt 11pt 0pt 11pt;
+  padding: 0;
+}
+  
+
+div#logo img{
+  border: none;
+  width: 469px;
+  height:67px;
+  position: relative;
+  left: -5px;
+}
+
+div#clogicalogo img{
+  border: none;
+  width: 415px;
+  height:69px;
+  position: relative;
+  left: -5px;
+}
+
+#topic { 
+  font-size: 13px;
+  margin-left: 0;
+  color: #666;
+  font-style: italic;
+  position: relative;
+  left: 2px;
+  top: -13px;
+  margin-bottom: 14pt;
+}
+
+#clogicatopic { 
+  font-size: 13px;
+  margin-left: 0;
+  color: #666;
+  font-style: italic;
+  position: relative;
+  left: 2px;
+  margin-bottom: 14pt;
+}
+         
+#timestamp { 
+  font-size: 10px; 
+  color: #999; 
+  position: relative; left: 2px; top: -15px;
+}
+
+#clogicatimestamp { 
+  font-size: 10px; 
+  color: #999; 
+  position: relative; left: 2px;
+}
+
+#attribution { 
+  border-top: #999 1px solid;
+  clear: right;
+  text-align: right;
+  padding-right: 10px;
+  font-size: 8pt; color: #999; 
+}
+
+.comments {
+  font-size: 10pt;
+  margin-bottom: 22pt;
+  margin-left: 0;
+}
+
+.comments img {
+  margin-top: 10px;
+}
+
+h1 {  
+  text-align: center;
+  font-size: 9pt;
+  font-weight: bold;
+  margin-bottom: 6pt;
+  margin-top: 12pt;
+}
+
+h1#search {
+  margin-top: 4pt;
+}
+
+.title { 
+  font-family: tahoma, sans-serif;
+  font-weight: bold; 
+  font-size: 14pt;
+  color: black;
+}
+
+.byline {
+  font-size: 8pt; 
+  margin-top: 3px;
+  margin-bottom: 15px;
+  color: black;
+}
+
+.commenter a {
+  color: #999;
+  text-decoration: none;
+}
+
+.commenter a:hover {
+  text-decoration: underline;
+}
+
+.nick {
+  font-weight: bold; 
+}
+
+.commenter {
+  color: #999; 
+}
+
+/* sidebar */
+.shadowbox {
+  background: #eee;
+  width: 147px;
+  margin-bottom: 22px;
+}
+
+#side {
+  float: right;
+  width: 20%;
+  margin: -5pt 0pt 0px 30pt; 
+}
+
+#nav {
+  border: 1px solid #999;
+  position: relative;
+  right: 3px;
+  bottom: 4px;
+  background: #fff;
+  padding-bottom: 12pt;
+}
+      
+.archive { 
+      text-align: center;
+			font-size: 9pt; color: #999; 
+}
+
+FORM {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+INPUT.txt {
+  border: 1px solid #999;
+  font-size: 10pt;
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+INPUT.btn {
+  background: white;
+  font-size: 10pt;
+  border-width: 1px;
+}
+
+/* c12a */
+#cgraph {
+  width: 147px;
+}
+
+#clogo {
+  border: none; 
+  margin-top: 5px; 
+  text-align: center;  
+}
+
+#clogo img {
+  border: none;
+}
+
+.plink {
+  padding: 10px; border: 1px solid #999; background: #fff; 
+  position: relative;
+  right: 3px;
+  bottom: 4px;
+}
+
+.ppic {
+  border: none;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.pframe {
+  margin-top: 10px; margin-bottom: 25px; background: #eee;
+}
+
+.carchive { 
+	font-size: 9pt; font-weight: bold; text-align: center; 
+  margin-bottom: 35px;
+  margin-top: -10px;
+}
+  
+.carchivel:link {
+  color: #555555; 
+}
+
+.carchivel:visited {
+  color: #555555; 
+}
+
+/* c10a */
+
+
+#clogica {
+  font-size: 8pt;
+  text-align: center;
+  position: relative;
+  right: 3px;
+  bottom: 4px;
+  background: #fff;
+  border: 1px solid #999;
+}
+
+#cllogo {
+  border: none; 
+  margin-bottom: 7pt; 
+  text-align: center;  
+  width: 147px;
+}
+
+#cllogo img {
+  border: none;
+}
+
+.clbyline {
+  font-size: 8pt;
+  white-space: nowrap;
+}
+
+.clentry {
+  text-align: left;
+  margin-top: 5pt;
+  padding-left: 4pt;
+  padding-right: 4pt;
+}
+
+.cltitle {
+  font-weight: bold;
+}
+
+.clarchive { 
+  font-size: 9pt; font-weight: bold; text-align: center; 
+  margin-top: 7pt;
+  margin-bottom: 3pt;
+}
+
+.clogicadate {
+  font-family: tahoma, sans-serif;
+  font-weight: bold; 
+  font-size: 14pt;
+  color: black;
+  margin-bottom: 8pt;
+}

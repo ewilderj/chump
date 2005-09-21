@@ -5,7 +5,6 @@
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
          xmlns:chump="http://usefulinc.com/ns/chump#"
 		 xmlns:content="http://purl.org/rss/1.0/modules/content/"
-		 xmlns="http://purl.org/rss/1.0/"
 		 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
 <xsl:output method="xml" indent="yes" />
@@ -22,7 +21,6 @@
 	 xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 	 xmlns:foaf="http://xmlns.com/foaf/0.1/"
      xmlns:chump="http://usefulinc.com/ns/chump#"
-	 xmlns:content="http://purl.org/rss/1.0/modules/content/"
  	 xmlns="http://purl.org/rss/1.0/">
 
 <channel rdf:about="http://pants.heddley.com/index.rss">
@@ -98,8 +96,7 @@ last modified <xsl:value-of select="last-updated"/>
  (<xsl:value-of select="time" />)
 </description>     
 <content:encoded rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
-<xsl:apply-templates select="comment" mode="encoded" />&lt;br /&gt;
-&lt;i&gt;(<xsl:value-of select="time" />)&lt;/i&gt;
+<xsl:apply-templates select="comment" mode="encoded" />
 </content:encoded>
 </item>
 </xsl:when>
@@ -127,9 +124,7 @@ last modified <xsl:value-of select="last-updated"/>
  (<xsl:value-of select="time" />)
 </description>
 <content:encoded rdf:datatype="http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral">
-<xsl:apply-templates select="comment" mode="encoded" />&lt;br /&gt;
-&lt;a href="http://pants.heddley.com/<xsl:value-of select="//relative-uri-stub/@value"/>.html#<xsl:value-of select="time/@value"/>"&gt;
-&lt;i&gt;(<xsl:value-of select="time" />)&lt;/i&gt;&lt;/a&gt;
+<xsl:apply-templates select="comment" mode="encoded" />
 </content:encoded>
 
 </xsl:if>
@@ -139,13 +134,23 @@ last modified <xsl:value-of select="last-updated"/>
 </xsl:choose>
 </xsl:template>
 
-<xsl:template match="comment" mode="encoded">&lt;b&gt;<xsl:value-of select="@nick" />:&lt;/b&gt;<xsl:text> </xsl:text><xsl:apply-templates select="text()|*" mode="encoded" />&lt;br /&gt;</xsl:template>
 
-<xsl:template match="img" mode="encoded">&lt;img src="<xsl:value-of select="@src" />"&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/img&gt;</xsl:template>
+<xsl:template match="comment" mode="encoded">     
+<xsl:value-of select="@nick" /><xsl:text>: </xsl:text> 
+<xsl:apply-templates select="text()|*" mode="encoded" />&lt;br /&gt;
+</xsl:template>
 
-<xsl:template match="a" mode="encoded">&lt;a href="<xsl:value-of select="@href" />"&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/a&gt;</xsl:template>
+<xsl:template match="img" mode="encoded">
+&lt;img src="<xsl:value-of select="@src" />"&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/img&gt;
+</xsl:template>
 
-<xsl:template match="i" mode="encoded">&lt;i&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/i&gt;</xsl:template>
+<xsl:template match="a" mode="encoded">
+&lt;a href="<xsl:value-of select="@href" />"&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/a&gt;
+</xsl:template>
+
+<xsl:template match="i" mode="encoded">
+&lt;i&gt;<xsl:apply-templates select="text()|*" mode="encoded" />&lt;/i&gt;
+</xsl:template>
 
 <xsl:template match="comment" mode="plain">     
 <xsl:value-of select="@nick" /><xsl:text>: </xsl:text> 
