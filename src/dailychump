@@ -1,0 +1,4 @@
+#!/bin/bash
+#
+CHUMP_BASE=@@WHERE@@
+python $CHUMP_BASE/dailychumptwist.py ${1+"$@"}

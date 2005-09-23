@@ -38,7 +38,7 @@ from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 from twisted.web import server, resource
 
-_version="1.99"
+_version="2.0"
 
 _M_QUIET=0
 _M_PRIVMSG=1
@@ -338,6 +338,10 @@ Usage: %s [ -h | --help ]
  -w, --web=PORT           Listen on specified port as a web server
  -x, --xsl=DIR            Use XSLT sheets in DIR to make web pages, using
                           churn_{html,rdf,rss}.xsl month_html.xsl year_html.xsl
+     --pingurl=URL        Appends filename to the URL and performs a GET
+                          each time the XML is modified.
+     --formchatport=N     Port number to place a web page to make the bot
+                          say things on IRC.
 
 Report bugs to <chump@heddley.com>""" % (invokedas, invokedas,
                                           invokedas, invokedas)
@@ -345,7 +349,7 @@ Report bugs to <chump@heddley.com>""" % (invokedas, invokedas,
 def version():
     print "Chump "+_version
     print
-    print "Copyright (C) 2001-2004 Matt Biddulph and Edd Dumbill"
+    print "Copyright (C) 2001-2005 Matt Biddulph and Edd Dumbill"
     print """This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
