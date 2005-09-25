@@ -23,6 +23,7 @@ install:
 	for x in $(WEB); do \
 		install -m 0644 web/$$x $(DESTDIR)/lib/dailychump/web/$$x; \
 	done
+	mkdir -p $(DESTDIR)/bin
 	sed -e 's#@@WHERE@@#$(DESTDIR)/lib/dailychump#' < dailychump \
 		> $(DESTDIR)/bin/dailychump
 	chmod 0755 $(DESTDIR)/bin/dailychump
