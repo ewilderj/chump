@@ -48,17 +48,17 @@ _A_GENERAL=0
 _A_SPECIFIC=1
 
 class URLPinger (IChumpListener):
-    def __init__ (self, servcoll, pingurl):
-        self._ping_url = pingurl
+    def __init__ (self, servcoll, pingurls):
+        self._ping_urls = pingurls
         self.spider = SpiderSender ()
         self.spider.setServiceParent (servcoll)
 
     def notify (self, event, arg):
         if event == 'saved':
-            theurl = self._ping_url + urllib.quote (arg, '')
-            print "Pinging",theurl
+            targets = [u+urllib.quote (arg, '') for u in self._ping_urls]
+            print "Pinging",targets
             self.spider.reportStatus ()
-            self.spider.addTargets ([theurl])
+            self.spider.addTargets (targets)
 
 class TellChannelForm(resource.Resource):
 
@@ -392,6 +392,7 @@ def main():
     web_port = None
     xsldir = None
     formchatport = None
+    pingurls = []
 
     for o in optlist:
         name = o[0]
@@ -437,7 +438,7 @@ def main():
             version()
             sys.exit(0)
         elif name in ('--pingurl'):
-            pingurl = value
+            pingurls.append (value)
         elif name in ('--formchatport'):
             formchatport = int(value)
 
@@ -452,8 +453,8 @@ def main():
         servcoll = service.IServiceCollection(app)
         internet.TCPClient (server, port, bot).setServiceParent(
                 servcoll)
-        if pingurl is not None:
-            chump.add_listener (URLPinger(servcoll, pingurl))
+        if len(pingurls)>0:
+            chump.add_listener (URLPinger(servcoll, pingurls))
 
         if formchatport is not None:
             g = TellChannelSite (chump)
