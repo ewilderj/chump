@@ -38,7 +38,7 @@ from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 from twisted.web import server, resource
 
-_version="2.0"
+_version="2.1"
 
 _M_QUIET=0
 _M_PRIVMSG=1
