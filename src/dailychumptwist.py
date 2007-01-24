@@ -37,6 +37,9 @@ from twisted.internet import reactor, protocol
 from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 from twisted.web import server, resource
+from twisted.words.protocols.jabber import client, jid
+from twisted.words.xish import domish
+
 
 _version="2.1"
 
@@ -313,6 +316,27 @@ class OneTimeKey(Protocol):
         self.transport.loseConnection()
         _chumpbot.notice_multiline("%d" % key)
 
+class TwitterInterface:
+	def __init__(self, reactor, chump, uid, passwd, serv):
+		self.chump = chump
+		myJid = jid.JID(uid+'/twisted_words')
+		factory = client.basicClientFactory(myJid, passwd)
+		factory.addBootstrap('//event/stream/authd', self.authd)
+		reactor.connectTCP(serv, 5222, factory)
+		
+	def authd(self, xmlstream):
+		print "authenticated"
+
+		presence = domish.Element(('jabber:client','presence'))
+		xmlstream.send(presence)
+
+		xmlstream.addObserver('/message',  self.jibjab)
+		#xmlstream.addObserver('/presence', jibjab)
+		#xmlstream.addObserver('/iq',       jibjab)   
+
+	def jibjab(self, elem):
+		self.chump.bot.notice_multiline(elem.toXml().encode('utf-8'))
+
 
 def usage(invokedas):
     print """`%s' runs a weblog from an IRC channel.
@@ -471,6 +495,8 @@ def main():
                 print "quixote not found, can't start web server"
 
         service.IService(app).startService ()
+        TwitterInterface(reactor, chump, "miles@jabber.gnomehack.com", "yfronts", "jabber.gnomehack.com")
+
         reactor.run ()
 
     else:
