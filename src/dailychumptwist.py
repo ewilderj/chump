@@ -37,6 +37,9 @@ from twisted.internet import reactor, protocol
 from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
 from twisted.web import server, resource
+from twisted.words.protocols.jabber import client, jid
+from twisted.words.xish import domish
+
 
 _version="2.1"
 
@@ -313,6 +316,34 @@ class OneTimeKey(Protocol):
         self.transport.loseConnection()
         _chumpbot.notice_multiline("%d" % key)
 
+class TwitterInterface:
+	def __init__(self, reactor, chump, uid, passwd, serv):
+		self.chump = chump
+		myJid = jid.JID(uid+'/twisted_words')
+		factory = client.basicClientFactory(myJid, passwd)
+		factory.addBootstrap('//event/stream/authd', self.authd)
+		reactor.connectTCP(serv, 5222, factory)
+		
+	def authd(self, xmlstream):
+		self.chump.bot.notice_multiline("Logged on to Jabber OK")
+
+		presence = domish.Element(('jabber:client','presence'))
+		xmlstream.send(presence)
+
+		xmlstream.addObserver('/message',  self.jibjab)
+		xmlstream.addObserver('/presence', self.debug)
+		xmlstream.addObserver('/iq',       self.debug)   
+
+	def debug(self, elem):
+		txt = elem.toXml().encode('utf-8')
+		#print txt
+
+	def jibjab(self, elem):
+		txt = elem.toXml().encode('utf-8')
+		m = re.search(r'<body.*?>(.*?)</body>', txt, re.MULTILINE)
+		if m is not None:
+			self.chump.bot.notice_multiline(m.group(1))
+
 
 def usage(invokedas):
     print """`%s' runs a weblog from an IRC channel.
@@ -342,6 +373,10 @@ Usage: %s [ -h | --help ]
                           each time the XML is modified.
      --formchatport=N     Port number to place a web page to make the bot
                           say things on IRC.
+     --jabber-id=STRING   Jabber ID to listen for chatter on, which is then
+                          echoed to the IRC channel (e.g. Twitter)
+     --jabber-server=STR  Jabber server to connect to
+     --jabber-password=S  Password for Jabber server
 
 Report bugs to <chump@heddley.com>""" % (invokedas, invokedas,
                                           invokedas, invokedas)
@@ -376,7 +411,10 @@ def main():
                                    "web",
                                    "xsl",
                                    "pingurl=",
-                                   "formchatport="])
+                                   "formchatport=",
+                                   "jabber-id=",
+                                   "jabber-server=",
+                                   "jabber-password="])
     port = 6667
 
     directory = ''
@@ -393,6 +431,9 @@ def main():
     xsldir = None
     formchatport = None
     pingurls = []
+    jabber_id = None
+    jabber_server = None
+    jabber_password = None
 
     for o in optlist:
         name = o[0]
@@ -441,6 +482,12 @@ def main():
             pingurls.append (value)
         elif name in ('--formchatport'):
             formchatport = int(value)
+        elif name in ('--jabber-server'):
+            jabber_server = value
+        elif name in ('--jabber-id'):
+            jabber_id = value
+        elif name in ('--jabber-password'):
+            jabber_password = value
 
     from dailychumptwist import DailyChumpTwistFactory, DailyChumpTwist
     if(directory != '' and channel != '' and
@@ -471,6 +518,9 @@ def main():
                 print "quixote not found, can't start web server"
 
         service.IService(app).startService ()
+        if jabber_password is not None and jabber_id is not None and jabber_server is not None:
+            TwitterInterface(reactor, chump, jabber_id, jabber_password, jabber_server)
+
         reactor.run ()
 
     else:
