@@ -325,7 +325,7 @@ class TwitterInterface:
 		reactor.connectTCP(serv, 5222, factory)
 		
 	def authd(self, xmlstream):
-		self.chump.bot.notice_multiline("Logged on to Jabber OK")
+		#self.chump.bot.notice_multiline("Logged on to Jabber OK")
 
 		presence = domish.Element(('jabber:client','presence'))
 		xmlstream.send(presence)
