@@ -32,7 +32,7 @@ import time
 import re
 import urllib
 
-from twisted.protocols import irc
+from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 from twisted.application import internet, service
 from twisted.internet.protocol import Protocol, Factory
