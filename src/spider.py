@@ -5,7 +5,7 @@
 
 
 import htmllib, formatter, os, urlparse
-from twisted.internet import app, reactor
+from twisted.internet import reactor
 from twisted.web import client
 from twisted.python import log
 from twisted.protocols.policies import TimeoutMixin
@@ -66,7 +66,6 @@ class SpiderSender(twisted.application.service.Service):
         self.tryDownload()
 
     def stopService(self):
-        app.ApplicationService.stopService(self)
         for transport in self.downloaders.values():
             transport.disconnect()
 
@@ -123,10 +122,9 @@ class SpiderSender(twisted.application.service.Service):
 #  subclass and override notifyDownloadEnd and notifyDownloadFailed
 
 if __name__ == '__main__':
-    from twisted.internet import app
     from twisted.python.util import println
  
-    a = app.Application("spider")
+    a = service.Application("spider")
     s = SpiderSender("spider", a)
     s.addTargets(['http://heddley.com/edd/foaf.rdf'])
     s.fileTemplate = os.path.join("/tmp", s.fileTemplate)
